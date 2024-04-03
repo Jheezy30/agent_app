@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-        create: (context) => Geoservice(),
+        create: (context) => Geoservice(context: context),
       child: const MyApp(),
     ),
   );
@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: VendorsPage(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.grey.shade100,
+      ),
     );
   }
 }
