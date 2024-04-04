@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,21 +10,20 @@ import '../components/custom_alert_dialogue.dart';
 class Geoservice extends ChangeNotifier {
   final BuildContext context;
   Position? currentPosition;
+  StreamSubscription<Position>? positionStreamSubscription;
   String? formattedAddress;
   bool isLoading = false;
   String? address;
   String? region;
   String? district;
   String? location;
+  String? town;
 
   Geoservice({
     required this.context,
   });
 
   Future<void> getCurrentLocation() async {
-
-
-
     LocationPermission permission = await getLocationPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -35,21 +36,18 @@ class Geoservice extends ChangeNotifier {
           distanceFilter: 10,
         );
 
-        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-          (Position? position) async {
-            if (position != null) {
-              currentPosition = position;
-
-            }
-          },
-        );
+        positionStreamSubscription = Geolocator.getPositionStream(
+          locationSettings: locationSettings,
+        ).listen((Position? position) async {
+          if (position != null) {
+            currentPosition = position;
+            positionStreamSubscription?.cancel();
+          }
+        });
       } catch (e) {
         print(e);
       }
     }
-
-
-
   }
 
   Future<LocationPermission> getLocationPermission() async {
@@ -108,6 +106,7 @@ class Geoservice extends ChangeNotifier {
         location = features[0]['properties']['formatted'];
         region = features[0]['properties']['state'];
         district = features[0]['properties']['county'];
+        town = features[0]['properties']['suburb'];
       } else {
         // Request failed
         showDialog(

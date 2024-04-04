@@ -72,31 +72,39 @@ class _CustomTableRowState extends State<CustomTableRow> {
           ),
           confirmationTableRow(
             title: 'Business Registration Number',
-            info: '${widget.user.businessRegistration}',
+            info: '${widget.user.businessRegistrationNumber}',
           ),
           confirmationTableRow(
             title: 'Phone Number',
-            info: '${widget.user.phone}',
-          ),
-          confirmationTableRow(
-            title: 'Id Number',
-            info: '${widget.user.idNumber}',
+            info: '${widget.user.contact}',
           ),
           confirmationTableRow(
             title: 'Id Type',
             info: '${widget.user.idType}',
           ),
           confirmationTableRow(
-            title: 'Network Type',
-            info: '${widget.user.selectedValue}',
+            title: 'Id Number',
+            info: '${widget.user.idNumber}',
           ),
           confirmationTableRow(
-            title: 'Wallet Number',
-            info: '${widget.user.wallet}',
+            title: 'Momos',
+            info: '${widget.user.momos}',
           ),
           confirmationTableRow(
+            title: 'Momos Number',
+            info: '${widget.user.momosNumber}',
+          ),
+          confirmationTableRow(
+            title: 'Momos Network',
+            info: '${widget.user.momosNetwork}',
+          ),
+           confirmationTableRow(
+            title: 'isAmbassador',
+            info: '${widget.user.isAmbassador}',
+          ),
+             confirmationTableRow(
             title: 'Zone',
-            info: '${widget.user.selected}',
+            info: '${widget.user.isLandTenureAgent}',
           ),
           confirmationTableRow(
             title: 'Longitude',
@@ -122,6 +130,12 @@ class _CustomTableRowState extends State<CustomTableRow> {
             title: 'Municipality',
             info: '${geo.district ?? 'N/A'}',
           ),
+            confirmationTableRow(
+            title: 'Suburb',
+            info: '${geo.town ?? 'N/A'}',
+          ),
+
+
         ],
       );
     });

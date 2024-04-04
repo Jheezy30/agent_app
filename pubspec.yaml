@@ -43,6 +43,7 @@ dependencies:
   dio: ^5.4.2
   flutter_svg: ^2.0.10+1
   google_geocoding_api: ^1.5.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

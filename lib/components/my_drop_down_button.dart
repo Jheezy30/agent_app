@@ -1,58 +1,72 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-
 class MyDropDownButton extends StatelessWidget {
   final List<String> items;
   final String selectedValue;
+  final String hintText;
   final void Function(String?)? onChanged;
+  final bool isRequired;
+  final String? Function(String?)? validator;
 
   const MyDropDownButton({
     Key? key,
     required this.items,
     required this.selectedValue,
     required this.onChanged,
+    required this.hintText,
+    this.isRequired = false,
+    this.validator,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25,),
+      padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Container(
-        height: 60,
+        height: 65,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade500),
         ),
-
-        child: DropdownButtonHideUnderline(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: DropdownButton<String>(
-              isExpanded: true,
-
-              value: selectedValue,
-              onChanged: onChanged,
-              items: items.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade900,
-                    ),
-                    ),
-                );
-
-              }).toList(),
-
-              style: TextStyle(color: Colors.grey.shade900,
-
-              ),
-              icon: const Icon(Icons.arrow_drop_down),
-              iconEnabledColor: Colors.grey.shade100,
-              dropdownColor: Colors.grey.shade100,
+        child: DropdownButtonFormField<String>(
+          isExpanded: true,
+          value: selectedValue.isNotEmpty && items.contains(selectedValue)
+              ? selectedValue
+              : null,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+            hintStyle: TextStyle(color: Colors.grey.shade500),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
             ),
           ),
+          hint: Text(hintText, style: TextStyle(color: Colors.grey.shade900)),
+          onChanged: onChanged,
+          items: items
+              .map<DropdownMenuItem<String>>(
+                (String value) => DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: TextStyle(fontSize: 16, color: Colors.grey.shade900),
+              ),
+            ),
+          )
+              .toList(),
+          style:  TextStyle(color: Colors.grey.shade100),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.grey.shade900,
+          ),
+          validator: validator ?? (value) {
+            if (isRequired && (value == null || value.isEmpty)) {
+              return 'This field is required';
+            }
+            return null;
+          },
         ),
       ),
     );
