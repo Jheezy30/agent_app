@@ -1,3 +1,4 @@
+import 'package:agent_app/components/custom_alert_dialogue.dart';
 import 'package:agent_app/components/my_button.dart';
 import 'package:agent_app/components/my_drop_down_button.dart';
 import 'package:agent_app/pages/confirm_details_page.dart';
@@ -37,6 +38,27 @@ class _VendorsPageState extends State<VendorsPage> {
   String _selected = 'Zone';
   String _idType = 'Id Type';
   User? user;
+
+   bool isAllInformationFilled() {
+    return nameController.text.isNotEmpty &&
+        businessNameController.text.isNotEmpty &&
+        businessRegistrationController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty &&
+        idNumberController.text.isNotEmpty &&
+        walletController.text.isNotEmpty &&
+        _selectedValue != 'Network Type' &&
+        _selected != 'Zone' &&
+        _idType != 'Id Type';
+  }
+
+  void informationIncomplete(BuildContext context){
+    showDialog(context: context, 
+    builder: (context) => CustomAlertDialog(title: 'Information Incomplete',
+     message: 'please fill in all the information',
+     ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +206,8 @@ class _VendorsPageState extends State<VendorsPage> {
                       ),
                       MyButton(
                         onTap: () {
-                          user = User(
+                          if(isAllInformationFilled()){
+                              user = User(
                             name: nameController.text,
                             businessName: businessNameController.text.isNotEmpty
                                 ? businessNameController.text
@@ -210,8 +233,13 @@ class _VendorsPageState extends State<VendorsPage> {
                                       user: user!,
 
 
-                                    )),
+                                    ),
+                                    ),
                           );
+                          } else{
+                            informationIncomplete(context);
+                          }
+                        
                         },
                         text: "Confirm details",
                       ),
