@@ -34,7 +34,13 @@ class MyDropDownButton extends StatelessWidget {
               items: items.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey.shade900,
+                    ),
+                    ),
                 );
 
               }).toList(),
@@ -42,7 +48,7 @@ class MyDropDownButton extends StatelessWidget {
               style: TextStyle(color: Colors.grey.shade900,
 
               ),
-              icon: Icon(Icons.arrow_drop_down),
+              icon: const Icon(Icons.arrow_drop_down),
               iconEnabledColor: Colors.grey.shade100,
               dropdownColor: Colors.grey.shade100,
             ),

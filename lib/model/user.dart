@@ -5,7 +5,7 @@ class User{
   final String? businessRegistration;
   final String phone;
   final String? idNumber;
-  final String? idType;
+  final String idType;
   final String selectedValue;
   final String selected;
   final String wallet;
@@ -16,7 +16,7 @@ class User{
     this.businessRegistration,
     required this.phone,
     this.idNumber,
-    this.idType,
+    required this.idType,
     required this.selectedValue,
     required this.selected,
     required this.wallet,

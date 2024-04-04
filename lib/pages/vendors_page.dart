@@ -32,10 +32,10 @@ class _VendorsPageState extends State<VendorsPage> {
       TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController idNumberController = TextEditingController();
-  final TextEditingController idTypeController = TextEditingController();
   final TextEditingController walletController = TextEditingController();
   String _selectedValue = 'Network Type';
   String _selected = 'Zone';
+  String _idType = 'Id Type';
   User? user;
 
   @override
@@ -105,12 +105,24 @@ class _VendorsPageState extends State<VendorsPage> {
                         hintText: "Phone Number",
                         obscureText: false,
                       ),
+                    
+
                       const SizedBox(
                         height: 10,
                       ),
 
-                      const SizedBox(
-                        height: 10,
+                     MyDropDownButton(
+                      items: ['Id Type', 'Ghana Card' , 'Driver License'],
+                       selectedValue: _idType,
+                        onChanged: (value){
+                          setState(() {
+                            _idType = value!;
+                          });
+                        },
+                        ),
+
+                         const SizedBox(
+                        height: 15,
                       ),
                       //id_number
                       MyTextField(
@@ -118,22 +130,12 @@ class _VendorsPageState extends State<VendorsPage> {
                         hintText: "Id Number",
                         obscureText: false,
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      // id_type
-                      MyTextField(
-                        controller: idTypeController,
-                        hintText: "IdType",
-                        obscureText: false,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                     
                       // momo type
                       const SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
+
                       MyDropDownButton(
                         items: [
                           'Network Type',
@@ -149,7 +151,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         },
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       // Wallet number
                       MyTextField(
@@ -158,7 +160,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         obscureText: false,
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       MyDropDownButton(
                         items: [
@@ -198,9 +200,8 @@ class _VendorsPageState extends State<VendorsPage> {
                             idNumber: idNumberController.text.isNotEmpty
                                 ? idNumberController.text
                                 : null,
-                            idType: idTypeController.text.isNotEmpty
-                                ? idTypeController.text
-                                : null,
+                            idType: _idType,
+                           
                           );
                           Navigator.push(
                             context,
