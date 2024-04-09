@@ -10,8 +10,8 @@ class User{
   final String momos;
   final String momosNumber;
   final String momosNetwork;
-  final String? isAmbassador;
-  final String? isLandTenureAgent;
+  final bool? isAmbassador;
+  final bool? isLandTenureAgent;
   final String? zone;
   final String? region;
   final String latitude;
