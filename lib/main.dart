@@ -1,3 +1,4 @@
+import 'package:agent_app/pages/login_page.dart';
 import 'package:agent_app/pages/vendors_page.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: VendorsPage(),
+        home: LoginPage(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey.shade100,
           textTheme: TextTheme(

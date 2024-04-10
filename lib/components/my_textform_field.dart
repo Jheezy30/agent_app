@@ -6,6 +6,7 @@ class MyTextFormField extends StatelessWidget {
   final String labelText;
   final bool isRequired;
   final bool isNumericOnly;
+  final bool isObsecureText;
   final String? Function(String?)? validator;
 
   const MyTextFormField({
@@ -14,6 +15,7 @@ class MyTextFormField extends StatelessWidget {
     required this.labelText,
     this.isRequired = false,
     this.isNumericOnly = false,
+    this.isObsecureText = false,
      this.validator,
     });
 
@@ -24,6 +26,7 @@ class MyTextFormField extends StatelessWidget {
       child: TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: controller,
+        obscureText: isObsecureText,
         style: TextStyle(color: Colors.grey.shade900),
         keyboardType: isNumericOnly ? TextInputType.number : TextInputType.text,
         decoration: InputDecoration(
