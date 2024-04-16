@@ -1,3 +1,4 @@
+import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/components/my_button.dart';
 import 'package:agent_app/components/my_drop_down_button.dart';
 import 'package:agent_app/components/my_textform_field.dart';
@@ -114,6 +115,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         MyTextFormField(
                           controller: businessRegistrationNumberController,
                           labelText: "Business Registration Number",
+                          isNumericOnly: true,
                         ),
                         const SizedBox(
                           height: 10,
@@ -196,6 +198,8 @@ class _VendorsPageState extends State<VendorsPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SwitchListTile(
                               value: isAmbassador,
+                              activeTrackColor:CustomColors.customColor,
+                              inactiveTrackColor: Colors.grey.shade300,
                               title: Text('isAmbassdor'),
                               onChanged: (value) {
                                 setState(() {
@@ -212,6 +216,9 @@ class _VendorsPageState extends State<VendorsPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SwitchListTile(
                               value: isLandTenureAgent,
+                              activeTrackColor:CustomColors.customColor,
+                              inactiveTrackColor: Colors.grey.shade300,
+                            
                               title: Text('isLandTenureAgent'),
                               onChanged: (value) {
                                 setState(() {

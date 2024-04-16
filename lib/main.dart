@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        home: VendorsPage(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey.shade100,
           textTheme: TextTheme(

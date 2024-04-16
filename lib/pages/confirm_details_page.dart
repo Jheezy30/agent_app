@@ -1,5 +1,6 @@
 import 'package:agent_app/components/custom_table_row.dart';
 import 'package:agent_app/components/my_button.dart';
+import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,22 @@ class ConfirmDetailsPage extends StatefulWidget {
     required this.user,
   });
 
+
+
   @override
   State<ConfirmDetailsPage> createState() => _ConfirmDetailsPageState();
 }
 
 class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
   bool _isLoading = false;
+  late Geoservice geo;
+
+     @override
+  void dispose() {
+    geo = Provider.of<Geoservice>(context, listen: false);
+    geo.cancelSubscription();  
+    super.dispose();
+  }
 
 
 

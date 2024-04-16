@@ -41,7 +41,7 @@ class Geoservice extends ChangeNotifier {
         ).listen((Position? position) async {
           if (position != null) {
             currentPosition = position;
-            positionStreamSubscription?.cancel();
+            
           }
         });
       } catch (e) {
@@ -49,6 +49,11 @@ class Geoservice extends ChangeNotifier {
       }
     }
   }
+
+  void cancelSubscription(){
+    positionStreamSubscription?.cancel();
+  }
+
 
   Future<LocationPermission> getLocationPermission() async {
     PermissionStatus permissionStatus = await Permission.location.request();
