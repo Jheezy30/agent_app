@@ -2,7 +2,9 @@ import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/components/my_button.dart';
 import 'package:agent_app/components/my_drop_down_button.dart';
 import 'package:agent_app/components/my_textform_field.dart';
+import 'package:agent_app/model/momo.dart';
 import 'package:agent_app/pages/confirm_details_page.dart';
+import 'package:agent_app/services/auth.dart';
 import 'package:agent_app/services/integration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,7 +28,7 @@ class _VendorsPageState extends State<VendorsPage> {
   void initState() {
     super.initState();
     geoservice = Provider.of<Geoservice>(context, listen: false);
-    geoservice.getCurrentLocation();
+    geoservice.startListeningForLocationUpdates();
   }
 
   final TextEditingController nameController = TextEditingController();
@@ -35,17 +37,18 @@ class _VendorsPageState extends State<VendorsPage> {
       TextEditingController();
   final TextEditingController contactController = TextEditingController();
   final TextEditingController idNumberController = TextEditingController();
-  final TextEditingController momosController = TextEditingController();
   final TextEditingController momosNumberController = TextEditingController();
 
   bool isAmbassador = false;
   bool isLandTenureAgent = false;
+  List<Momo> momos = [];
 
   String _networkType = '';
   String _zone = '';
   String _idType = '';
   User? user;
-
+  
+ 
   final _formKey = GlobalKey<FormState>();
 
   String? _nameValidator(String? value) {
@@ -55,8 +58,25 @@ class _VendorsPageState extends State<VendorsPage> {
     return null;
   }
 
+  void saveModel() {
+    String momoNumber = momosNumberController.text;
+    String networkType = _networkType;
+
+    if (momoNumber.isNotEmpty & networkType.isNotEmpty) {
+      Momo momo = Momo(number: momoNumber, network: networkType);
+
+      setState(() {
+        momos.add(momo);
+      });
+      momosNumberController.clear();
+      _networkType = '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
+    String currentId = auth.user_id;
     return Consumer<Geoservice>(
       builder: (__, geoservice, _) => Scaffold(
         body: Padding(
@@ -95,7 +115,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
                         MyTextFormField(
                           controller: nameController,
-                          labelText: "Name",
+                          labelText: "name",
                           isRequired: true,
                           validator: _nameValidator,
                         ),
@@ -105,7 +125,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         // business name
                         MyTextFormField(
                           controller: businessNameController,
-                          labelText: "Business Name",
+                          labelText: "Business name",
                         ),
 
                         const SizedBox(
@@ -156,41 +176,66 @@ class _VendorsPageState extends State<VendorsPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        MyTextFormField(
-                          controller: momosController,
-                          labelText: "Momos",
-                          isRequired: true,
-                          isNumericOnly: true,
-                          validator: _nameValidator,
-                        ),
 
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        MyTextFormField(
-                          controller: momosNumberController,
-                          labelText: "Momos Number",
-                          isRequired: true,
-                          isNumericOnly: true,
-                          validator: _nameValidator,
-                        ),
+                        ElevatedButton(
+                            onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('momo'),
+                                    content: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      child: Column(
+                                        children: [
+                                          //the tex form for entering the number
+                                          MyTextFormField(
+                                            controller: momosNumberController,
+                                            labelText: "Momos Number",
+                                            isRequired: true,
+                                            isNumericOnly: true,
+                                            validator: _nameValidator,
+                                          ),
 
-                        // momo type
-                        const SizedBox(
-                          height: 15,
-                        ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
 
-                        MyDropDownButton(
-                          items: ['MTN', 'Telecel', 'AirtelTigo'],
-                          selectedValue: _networkType,
-                          validator: _nameValidator,
-                          onChanged: (value) {
-                            setState(() {
-                              _networkType = value!;
-                            });
-                          },
-                          hintText: 'Momos Network',
-                        ),
+                                          MyDropDownButton(
+                                            items: [
+                                              'MTN',
+                                              'Telecel',
+                                              'AirtelTigo'
+                                            ],
+                                            selectedValue: _networkType,
+                                            validator: _nameValidator,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _networkType = value!;
+                                              });
+                                            },
+                                            hintText: 'Momos Network',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          saveModel();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('save'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('cancel'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            child: Text("Select momo")),
+
                         const SizedBox(
                           height: 15,
                         ),
@@ -198,7 +243,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SwitchListTile(
                               value: isAmbassador,
-                              activeTrackColor:CustomColors.customColor,
+                              activeTrackColor: CustomColors.customColor,
                               inactiveTrackColor: Colors.grey.shade300,
                               title: Text('isAmbassdor'),
                               onChanged: (value) {
@@ -216,9 +261,8 @@ class _VendorsPageState extends State<VendorsPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SwitchListTile(
                               value: isLandTenureAgent,
-                              activeTrackColor:CustomColors.customColor,
+                              activeTrackColor: CustomColors.customColor,
                               inactiveTrackColor: Colors.grey.shade300,
-                            
                               title: Text('isLandTenureAgent'),
                               onChanged: (value) {
                                 setState(() {
@@ -234,7 +278,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
                         MyDropDownButton(
                           items: [
-                            'Zone',
+                          
                             'Greater Accra',
                             'Eastern ',
                             'Middle Belt',
@@ -258,27 +302,26 @@ class _VendorsPageState extends State<VendorsPage> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
                               user = User(
+                                user_id: currentId,
                                 name: nameController.text,
-                                businessName:
+                                business_name:
                                     businessNameController.text.isNotEmpty
                                         ? businessNameController.text
                                         : null,
-                                businessRegistrationNumber:
+                                business_registration_number:
                                     businessRegistrationNumberController
                                             .text.isNotEmpty
                                         ? businessRegistrationNumberController
                                             .text
                                         : null,
                                 contact: contactController.text,
-                                idNumber: idNumberController.text.isNotEmpty
+                                id_number: idNumberController.text.isNotEmpty
                                     ? idNumberController.text
                                     : null,
-                                idType: _idType,
-                                momos: momosController.text,
-                                momosNumber: momosNumberController.text,
-                                momosNetwork: _networkType,
-                                isAmbassador: isAmbassador,
-                                isLandTenureAgent: isLandTenureAgent,
+                                id_type: _idType,
+                                momos: momos,
+                                is_ambassador: isAmbassador,
+                                is_land_tenure_agent: isLandTenureAgent,
                                 zone: _zone,
                                 location: '${geoservice.town ?? 'N/A'}',
                                 longitude:

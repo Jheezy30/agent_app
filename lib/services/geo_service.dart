@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../components/custom_alert_dialogue.dart';
-
 class Geoservice extends ChangeNotifier {
-  final BuildContext context;
   Position? currentPosition;
   StreamSubscription<Position>? positionStreamSubscription;
   String? formattedAddress;
@@ -18,17 +15,30 @@ class Geoservice extends ChangeNotifier {
   String? district;
   String? location;
   String? town;
+  bool isListening = false;
 
-  Geoservice({
-    required this.context,
-  });
+  Geoservice();
+
+  void startListeningForLocationUpdates() {
+    if (!isListening) {
+      getCurrentLocation();
+      isListening = true;
+    }
+  }
+
+  void stopListeningForLocationUpdates() {
+    if (isListening) {
+      cancelSubscription();
+      isListening = false;
+    }
+  }
 
   Future<void> getCurrentLocation() async {
     LocationPermission permission = await getLocationPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     } else if (permission == LocationPermission.deniedForever) {
-      await openAppSettings();
+      // Handle denied forever case
     } else {
       try {
         final LocationSettings locationSettings = LocationSettings(
@@ -41,7 +51,7 @@ class Geoservice extends ChangeNotifier {
         ).listen((Position? position) async {
           if (position != null) {
             currentPosition = position;
-            
+            notifyListeners();
           }
         });
       } catch (e) {
@@ -50,10 +60,9 @@ class Geoservice extends ChangeNotifier {
     }
   }
 
-  void cancelSubscription(){
+  void cancelSubscription() {
     positionStreamSubscription?.cancel();
   }
-
 
   Future<LocationPermission> getLocationPermission() async {
     PermissionStatus permissionStatus = await Permission.location.request();
@@ -62,42 +71,11 @@ class Geoservice extends ChangeNotifier {
         : LocationPermission.denied;
   }
 
-/*
-  Future<void> addressSearch() async {
-    const String googleApiKey =
-        'AIzaSyA2e0qYEm1s5blKSZJfBfxzzxiHoeHNkN8'; // Replace with your API key
-    final bool isDebugMode = true;
-    final api = GoogleGeocodingApi(googleApiKey, isLogged: isDebugMode);
-
-    try {
-      final reversedSearchResults = await api.reverse(
-        '${currentPosition?.latitude}, ${currentPosition?.longitude}',
-        language: 'en',
-      );
-      if (reversedSearchResults.results.isNotEmpty) {
-        final result = reversedSearchResults.results.first;
-
-        // Extract formatted address
-        formattedAddress = result.formattedAddress;
-
-        // Extract administrative area level 1 and level 2
-        result.addressComponents.forEach((component) {
-          if (component.types.contains('administrative_area_level_1')) {
-            administrativeAreaLevel1 = component.longName;
-          } else if (component.types.contains('administrative_area_level_2')) {
-            administrativeAreaLevel2 = component.longName;
-          }
-        });
-      }
-      notifyListeners();
-    } catch (e) {
-      print('Error occurred during address search: $e');
-    }
-  }
-
- */
-
   Future<void> search() async {
+    if (currentPosition == null) {
+      // Location not available yet, return or show error
+      return;
+    }
     isLoading = true;
     notifyListeners();
     final dio = Dio();
@@ -114,23 +92,11 @@ class Geoservice extends ChangeNotifier {
         town = features[0]['properties']['suburb'];
       } else {
         // Request failed
-        showDialog(
-          context: context,
-          builder: (context) => CustomAlertDialog(
-            title: 'Operation Failed',
-            message: 'The operation was not successful.',
-          ),
-        );
+        // Handle error
       }
     } catch (e) {
       // Error occurred during the request
-      showDialog(
-        context: context,
-        builder: (context) => CustomAlertDialog(
-          title: 'Operation Failed',
-          message: 'An error occurred while performing the operation.',
-        ),
-      );
+      // Handle error
     }
     isLoading = false;
     notifyListeners();

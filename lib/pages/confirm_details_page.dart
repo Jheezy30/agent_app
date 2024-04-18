@@ -1,5 +1,6 @@
 import 'package:agent_app/components/custom_table_row.dart';
 import 'package:agent_app/components/my_button.dart';
+import 'package:agent_app/pages/home_page.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
 import 'package:dio/dio.dart';
@@ -17,8 +18,6 @@ class ConfirmDetailsPage extends StatefulWidget {
     required this.user,
   });
 
-
-
   @override
   State<ConfirmDetailsPage> createState() => _ConfirmDetailsPageState();
 }
@@ -26,15 +25,6 @@ class ConfirmDetailsPage extends StatefulWidget {
 class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
   bool _isLoading = false;
   late Geoservice geo;
-
-     @override
-  void dispose() {
-    geo = Provider.of<Geoservice>(context, listen: false);
-    geo.cancelSubscription();  
-    super.dispose();
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +60,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
             MyButton(
               onTap: () async {
                 bool result = await integration.send(widget.user);
+                
                 if (!result) {
                   showDialog(
                     context: context,
@@ -80,6 +71,15 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                     ),
                   );
                 }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(
+                      
+                    ),
+                  ),
+                );
               },
               text: 'Register',
             ),

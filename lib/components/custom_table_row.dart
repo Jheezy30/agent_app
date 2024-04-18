@@ -1,3 +1,4 @@
+import 'package:agent_app/model/momo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +7,7 @@ import '../services/geo_service.dart';
 
 class CustomTableRow extends StatefulWidget {
   final User user;
+  
 
   const CustomTableRow({super.key, required this.user});
 
@@ -14,10 +16,9 @@ class CustomTableRow extends StatefulWidget {
 }
 
 class _CustomTableRowState extends State<CustomTableRow> {
-
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Future.microtask(() {
       context.read<Geoservice>().search();
@@ -25,11 +26,10 @@ class _CustomTableRowState extends State<CustomTableRow> {
   }
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
+     
+
     return Consumer<Geoservice>(builder: (__, geo, _) {
       if (geo.isLoading) {
         return Center(
@@ -62,17 +62,18 @@ class _CustomTableRowState extends State<CustomTableRow> {
             ),
             SizedBox(), // Spacer for the second cell in the header row
           ]),
+         
           confirmationTableRow(
             title: 'Name',
             info: '${widget.user.name}',
           ),
           confirmationTableRow(
             title: 'Business Name',
-            info: '${widget.user.businessName}',
+            info: '${widget.user.business_name}',
           ),
           confirmationTableRow(
             title: 'Business Registration Number',
-            info: '${widget.user.businessRegistrationNumber}',
+            info: '${widget.user.business_registration_number}',
           ),
           confirmationTableRow(
             title: 'Phone Number',
@@ -80,31 +81,30 @@ class _CustomTableRowState extends State<CustomTableRow> {
           ),
           confirmationTableRow(
             title: 'Id Type',
-            info: '${widget.user.idType}',
+            info: '${widget.user.id_type}',
           ),
           confirmationTableRow(
             title: 'Id Number',
-            info: '${widget.user.idNumber}',
+            info: '${widget.user.id_number}',
           ),
+ confirmationTableRow(
+            title: 'Momo Numbers',
+            info: '',
+          ),
+
+          ...List.generate(widget.user.momos.length, (index){
+            Momo momo = widget.user.momos[index];
+            return confirmationTableRow(title: momo.network, info: momo.number,);
+          }),
+
+       
           confirmationTableRow(
-            title: 'Momos',
-            info: '${widget.user.momos}',
-          ),
-          confirmationTableRow(
-            title: 'Momos Number',
-            info: '${widget.user.momosNumber}',
-          ),
-          confirmationTableRow(
-            title: 'Momos Network',
-            info: '${widget.user.momosNetwork}',
-          ),
-           confirmationTableRow(
             title: 'isAmbassador',
-            info: '${widget.user.isAmbassador}',
+            info: '${widget.user.is_ambassador}',
           ),
-             confirmationTableRow(
+          confirmationTableRow(
             title: 'Zone',
-            info: '${widget.user.isLandTenureAgent}',
+            info: '${widget.user.is_land_tenure_agent}',
           ),
           confirmationTableRow(
             title: 'Longitude',
@@ -130,12 +130,10 @@ class _CustomTableRowState extends State<CustomTableRow> {
             title: 'Municipality',
             info: '${geo.district ?? 'N/A'}',
           ),
-            confirmationTableRow(
+          confirmationTableRow(
             title: 'Suburb',
             info: '${geo.town ?? 'N/A'}',
           ),
-
-
         ],
       );
     });
