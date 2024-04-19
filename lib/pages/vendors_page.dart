@@ -47,8 +47,7 @@ class _VendorsPageState extends State<VendorsPage> {
   String _zone = '';
   String _idType = '';
   User? user;
-  
- 
+
   final _formKey = GlobalKey<FormState>();
 
   String? _nameValidator(String? value) {
@@ -178,63 +177,100 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
 
                         ElevatedButton(
-                            onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text('momo'),
-                                    content: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Column(
-                                        children: [
-                                          //the tex form for entering the number
-                                          MyTextFormField(
-                                            controller: momosNumberController,
-                                            labelText: "Momos Number",
-                                            isRequired: true,
-                                            isNumericOnly: true,
-                                            validator: _nameValidator,
-                                          ),
-
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-
-                                          MyDropDownButton(
-                                            items: [
-                                              'MTN',
-                                              'Telecel',
-                                              'AirtelTigo'
-                                            ],
-                                            selectedValue: _networkType,
-                                            validator: _nameValidator,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _networkType = value!;
-                                              });
-                                            },
-                                            hintText: 'Momos Network',
-                                          ),
-                                        ],
+                          style: ButtonStyle(
+                            padding:
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                              EdgeInsets.symmetric(
+                                  vertical: 25.0, horizontal: 100.0),
+                            ),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                CustomColors.customColor),
+                          ),
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                'momos',
+                              ),
+                              content: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Column(
+                                    children: [
+                                      //the tex form for entering the number
+                                      MyTextFormField(
+                                        controller: momosNumberController,
+                                        labelText: "Momos Number",
+                                        isRequired: true,
+                                        isNumericOnly: true,
+                                        validator: _nameValidator,
                                       ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          saveModel();
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text('save'),
+
+                                      const SizedBox(
+                                        height: 15,
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
+
+                                      MyDropDownButton(
+                                        items: ['MTN', 'Telecel', 'AirtelTigo'],
+                                        selectedValue: _networkType,
+                                        validator: _nameValidator,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _networkType = value!;
+                                          });
                                         },
-                                        child: Text('cancel'),
+                                        hintText: 'Momos Network',
                                       ),
                                     ],
                                   ),
                                 ),
-                            child: Text("Select momo")),
+                              ),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        saveModel();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'save',
+                                        style: TextStyle(
+                                          color: CustomColors.customColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'cancel',
+                                        style: TextStyle(
+                                          color: CustomColors.customColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                              insetPadding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.1,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            "Select momo",
+                            style: TextStyle(
+                              color: Colors.grey.shade100,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
 
                         const SizedBox(
                           height: 15,
@@ -278,7 +314,6 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
                         MyDropDownButton(
                           items: [
-                          
                             'Greater Accra',
                             'Eastern ',
                             'Middle Belt',

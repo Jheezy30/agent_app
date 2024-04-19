@@ -7,7 +7,6 @@ import '../services/geo_service.dart';
 
 class CustomTableRow extends StatefulWidget {
   final User user;
-  
 
   const CustomTableRow({super.key, required this.user});
 
@@ -18,121 +17,176 @@ class CustomTableRow extends StatefulWidget {
 class _CustomTableRowState extends State<CustomTableRow> {
   @override
   void initState() {
-
     super.initState();
     Future.microtask(() {
       context.read<Geoservice>().search();
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-     
-
     return Consumer<Geoservice>(builder: (__, geo, _) {
       if (geo.isLoading) {
         return Center(
           child: CircularProgressIndicator(),
         );
       }
-      return Table(
-        textDirection: TextDirection.ltr,
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder(
-          bottom: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TableRow(children: [
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  "Confirm Details",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          Table(
+            textDirection: TextDirection.ltr,
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            border: TableBorder(
+              bottom: BorderSide(
+                color: Colors.grey.shade300,
+                width: 1.0,
               ),
-              verticalAlignment: TableCellVerticalAlignment.middle,
+              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
             ),
-            SizedBox(), // Spacer for the second cell in the header row
-          ]),
-         
-          confirmationTableRow(
-            title: 'Name',
-            info: '${widget.user.name}',
+            children: [
+              TableRow(children: [
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      "Confirm Details",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                ),
+                SizedBox(), // Spacer for the second cell in the header row
+              ]),
+              confirmationTableRow(
+                title: 'Name',
+                info: '${widget.user.name}',
+              ),
+              confirmationTableRow(
+                title: 'Id Type',
+                info: '${widget.user.id_type}',
+              ),
+              confirmationTableRow(
+                title: 'Id Number',
+                info: '${widget.user.id_number}',
+              ),
+            ],
           ),
-          confirmationTableRow(
-            title: 'Business Name',
-            info: '${widget.user.business_name}',
+          SizedBox(height: 50), // Space between tables
+          Table(
+            textDirection: TextDirection.ltr,
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            border: TableBorder(
+              bottom: BorderSide(
+                color: Colors.grey.shade300,
+                width: 1.0,
+              ),
+              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+            ),
+            children: [
+              TableRow(children: [
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      "Business Details",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                ),
+                SizedBox(), // Spacer for the second cell in the header row
+              ]),
+              confirmationTableRow(
+                title: 'Business Name',
+                info: '${widget.user.business_name}',
+              ),
+              confirmationTableRow(
+                title: 'Business Registration Number',
+                info: '${widget.user.business_registration_number}',
+              ),
+              confirmationTableRow(
+                title: 'Phone Number',
+                info: '${widget.user.contact}',
+              ),
+            ],
           ),
-          confirmationTableRow(
-            title: 'Business Registration Number',
-            info: '${widget.user.business_registration_number}',
-          ),
-          confirmationTableRow(
-            title: 'Phone Number',
-            info: '${widget.user.contact}',
-          ),
-          confirmationTableRow(
-            title: 'Id Type',
-            info: '${widget.user.id_type}',
-          ),
-          confirmationTableRow(
-            title: 'Id Number',
-            info: '${widget.user.id_number}',
-          ),
- confirmationTableRow(
-            title: 'Momo Numbers',
-            info: '',
-          ),
-
-          ...List.generate(widget.user.momos.length, (index){
-            Momo momo = widget.user.momos[index];
-            return confirmationTableRow(title: momo.network, info: momo.number,);
-          }),
-
-       
-          confirmationTableRow(
-            title: 'isAmbassador',
-            info: '${widget.user.is_ambassador}',
-          ),
-          confirmationTableRow(
-            title: 'Zone',
-            info: '${widget.user.is_land_tenure_agent}',
-          ),
-          confirmationTableRow(
-            title: 'Longitude',
-            info: '${geo.currentPosition?.longitude ?? 'N/A'}',
-          ),
-          confirmationTableRow(
-            title: 'Latitude',
-            info: '${geo.currentPosition?.latitude ?? 'N/A'}',
-          ),
-          confirmationTableRow(
-            title: 'Address',
-            info: '${geo.address ?? 'N/A'}',
-          ),
-          confirmationTableRow(
-            title: 'location',
-            info: '${geo.location ?? 'N/A'}',
-          ),
-          confirmationTableRow(
-            title: 'Region',
-            info: '${geo.region ?? 'N/A'}',
-          ),
-          confirmationTableRow(
-            title: 'Municipality',
-            info: '${geo.district ?? 'N/A'}',
-          ),
-          confirmationTableRow(
-            title: 'Suburb',
-            info: '${geo.town ?? 'N/A'}',
+          SizedBox(height: 50), // Space between tables
+          Table(
+            textDirection: TextDirection.ltr,
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            border: TableBorder(
+              bottom: BorderSide(
+                color: Colors.grey.shade300,
+                width: 1.0,
+              ),
+              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+            ),
+            children: [
+              TableRow(children: [
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      "Other Details",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                ),
+                SizedBox(), // Spacer for the second cell in the header row
+              ]),
+             
+              ...List.generate(widget.user.momos.length, (index) {
+                Momo momo = widget.user.momos[index];
+                return confirmationTableRow(title: momo.network, info: momo.number);
+              }),
+              confirmationTableRow(
+                title: 'isAmbassador',
+                info: '${widget.user.is_ambassador}',
+              ),
+              confirmationTableRow(
+                title: 'isLandTenureAgent',
+                info: '${widget.user.is_land_tenure_agent}',
+              ),
+              confirmationTableRow(
+                title: 'Longitude',
+                info: '${geo.currentPosition?.longitude ?? 'N/A'}',
+              ),
+              confirmationTableRow(
+                title: 'Latitude',
+                info: '${geo.currentPosition?.latitude ?? 'N/A'}',
+              ),
+              confirmationTableRow(
+                title: 'Address',
+                info: '${geo.address ?? 'N/A'}',
+              ),
+              confirmationTableRow(
+                title: 'location',
+                info: '${geo.location ?? 'N/A'}',
+              ),
+              confirmationTableRow(
+                title: 'Region',
+                info: '${geo.region ?? 'N/A'}',
+              ),
+              confirmationTableRow(
+                title: 'Municipality',
+                info: '${geo.district ?? 'N/A'}',
+              ),
+              confirmationTableRow(
+                title: 'Suburb',
+                info: '${geo.town ?? 'N/A'}',
+              ),
+            ],
           ),
         ],
       );
