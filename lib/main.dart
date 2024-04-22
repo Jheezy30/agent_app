@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: VendorsPage(),
+        home: LoginPage(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey.shade100,
           textTheme: TextTheme(

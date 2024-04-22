@@ -1,3 +1,4 @@
+import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/model/momo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,9 @@ class _CustomTableRowState extends State<CustomTableRow> {
     return Consumer<Geoservice>(builder: (__, geo, _) {
       if (geo.isLoading) {
         return Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+             valueColor: AlwaysStoppedAnimation<Color>(CustomColors.customColor),
+          ),
         );
       }
       return Column(

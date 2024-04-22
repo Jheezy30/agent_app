@@ -1,17 +1,18 @@
-import 'package:agent_app/components/custom_color.dart';
-import 'package:agent_app/components/my_button.dart';
-import 'package:agent_app/components/my_drop_down_button.dart';
-import 'package:agent_app/components/my_textform_field.dart';
-import 'package:agent_app/model/momo.dart';
-import 'package:agent_app/pages/confirm_details_page.dart';
-import 'package:agent_app/services/auth.dart';
-import 'package:agent_app/services/integration.dart';
+import 'dart:convert';
+import 'package:agent_app/model/td.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import '../components/custom_alert_dialogue.dart';
+import '../components/custom_color.dart';
+import '../components/my_button.dart';
+import '../components/my_drop_down_button.dart';
+import '../components/my_textform_field.dart';
+import '../model/momo.dart';
 import '../model/user.dart';
+import '../pages/confirm_details_page.dart';
+import '../services/auth.dart';
 import '../services/geo_service.dart';
 
 class VendorsPage extends StatefulWidget {
@@ -336,7 +337,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              user = User(
+                              final user = User(
                                 user_id: currentId,
                                 name: nameController.text,
                                 business_name:

@@ -1,44 +1,56 @@
+import 'dart:convert';
 import 'package:agent_app/model/td.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth extends ChangeNotifier {
-  bool _isLoading = false;
-  String user_id ='';
-  String token =
-      'oYA3AijAoQ1Qt8K37cZWOmAYJqEDWhFhE0n5d3iKav5qAvhbQex1zPremUqyCPBBaS96rwGATCZJqDs5DRrLJljIAXQ7MgNG1Kmlc12IG8yMZ2HXqExuvwgEuGENbdjvEfKnABg8cer45UHhxgqCO18Fo5nakFZQpPYpWxUghhQOepkTGN2p';
+  bool isLoading = false;
+  String token = '';
+  String user_id = '';
 
-  Future<bool> send(TD td) async {
-    _isLoading = true;
+  Future<bool> login(TD td) async {
+    isLoading = true;
     notifyListeners();
 
-    final dio = Dio();
-    try {
-      Response response = await dio.post(
-        'https://srrw9ss6bj.execute-api.eu-west-1.amazonaws.com/dev/api/login',
-        data: td.toJson(),
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
+    var basicAuth =
+        'Basic ' + base64Encode(utf8.encode('${td.username}:${td.password}'));
 
-      _isLoading = false;
-      notifyListeners();
-      if (response.statusCode == 201) {
-        String token = response.data['token'];
-        user_id = response.data['user']['id'];
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
-        token = token;
+    try {
+      final dio = Dio();
+      Response response = await dio.post(
+          'https://srrw9ss6bj.execute-api.eu-west-1.amazonaws.com/dev/api/login',
+          data: td.toJson(),
+          options: Options(headers: {'Authorization': basicAuth}));
+
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        print(response.data);
+        String bearerToken = response.data['data']['bearer_token'];
+        user_id = response.data['data']['user']['id'];
+        print(user_id);
+        isLoading = false;
+        notifyListeners();
 
         return true;
       } else {
         return false;
       }
     } catch (e) {
-      _isLoading = false;
-      print(e);
+      isLoading = false;
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> saveToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+  }
+
+  Future<void> clearToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
   }
 }

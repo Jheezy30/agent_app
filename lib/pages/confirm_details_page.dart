@@ -70,7 +70,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                           'An error occurred while performing the operation.',
                     ),
                   );
-                }
+                }else{
 
                 Navigator.push(
                   context,
@@ -80,6 +80,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                     ),
                   ),
                 );
+                }
               },
               text: 'Register',
             ),

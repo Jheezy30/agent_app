@@ -1,4 +1,3 @@
-
 import 'package:agent_app/model/momo.dart';
 
 class User {
@@ -40,6 +39,9 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    var momosJson = json['momos'] as List;
+    List<Momo> momos = momosJson.map((momoJson) => Momo.fromJson(momoJson)).toList();
+
     return User(
       user_id: json['user_id'],
       name: json['name'],
@@ -49,7 +51,7 @@ class User {
       location: json['location'],
       id_number: json['id_number'],
       id_type: json['id_type'],
-      momos: json['momos'],
+      momos: momos,
       is_ambassador: json['is_ambassador'],
       is_land_tenure_agent: json['is_land_tenure_agent'],
       zone: json['zone'],
@@ -69,13 +71,13 @@ class User {
     'location': location,
     'id_number': id_number,
     'id_type': id_type,
-    'momos': momos,
+    'momos': momos.map((momo) => momo.toJson()).toList(), 
     'is_ambassador': is_ambassador,
     'is_land_tenure_agent': is_land_tenure_agent,
     'zone': zone,
     'region': region,
     'coordinates': coordinates,
     'latitude': latitude,
-    longitude: longitude,
+    'longitude': longitude, 
   };
 }
