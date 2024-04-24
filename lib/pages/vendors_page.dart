@@ -213,7 +213,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                       ),
 
                                       MyDropDownButton(
-                                        items: ['MTN', 'Telecel', 'AirtelTigo'],
+                                        items: ['MTN', 'TELECEL', 'AT'],
                                         selectedValue: _networkType,
                                         validator: _nameValidator,
                                         onChanged: (value) {

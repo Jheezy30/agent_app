@@ -1,3 +1,4 @@
+import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/components/custom_table_row.dart';
 import 'package:agent_app/components/my_button.dart';
 import 'package:agent_app/pages/home_page.dart';
@@ -57,33 +58,71 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
             const SizedBox(
               height: 20,
             ),
-            MyButton(
-              onTap: () async {
-                bool result = await integration.send(widget.user);
-                
-                if (!result) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => CustomAlertDialog(
-                      title: 'Operation Failed',
-                      message:
-                          'An error occurred while performing the operation.',
-                    ),
-                  );
-                }else{
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(
+            ElevatedButton(
+                      onPressed: () async {
+                       
+                        bool myresult = await integration.send(widget.user);
+                        if (!myresult) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              title: 'Operation Failed',
+                              message:
+                                  'An error occurred while performing the operation.',
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                          );
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          CustomColors.customColor,
+                        ),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
                       
+                      child: Container(
+                        width: 260, 
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        alignment: Alignment.center,
+                        child: integration.isLoading
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Registering...",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(
+                                "Register",
+                                style: TextStyle(
+                                  color: Colors.grey.shade100,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                      ),
                     ),
-                  ),
-                );
-                }
-              },
-              text: 'Register',
-            ),
             const SizedBox(
               height: 10,
             ),

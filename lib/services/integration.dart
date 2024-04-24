@@ -26,10 +26,11 @@ class Integration extends ChangeNotifier {
       print('Received response');
       print("Response status code: ${response.statusCode}");
 
-      isLoading = false;
-      notifyListeners();
+      
 
       if (response.statusCode == 200) {
+        isLoading = false;
+        notifyListeners();
         return true;
       } else {
         return false;
