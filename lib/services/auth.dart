@@ -27,9 +27,11 @@ class Auth extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         print(response.data);
-        String bearerToken = response.data['data']['bearer_token'];
+        token = response.data['data']['bearer_token'];
         user_id = response.data['data']['user']['id'];
         print(user_id);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', token);
         isLoading = false;
         notifyListeners();
 
@@ -42,15 +44,5 @@ class Auth extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-  }
-
-  Future<void> saveToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
-  }
-
-  Future<void> clearToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
   }
 }

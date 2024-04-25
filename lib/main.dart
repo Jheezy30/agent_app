@@ -1,46 +1,65 @@
-import 'package:agent_app/model/td.dart';
-import 'package:agent_app/pages/login_page.dart';
 import 'package:agent_app/pages/vendors_page.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:agent_app/pages/login_page.dart';
 import 'package:agent_app/services/auth.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+void main() async {
+  String initialRoute;
 
+  // Handle exceptions caused by making main async
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(MyApp());
+  // Init a shared preferences variable
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // Read token
+   String? token = prefs.getString('token');
+
+  // Use Dart's null safety operator
+  if (token?.isEmpty ?? true)
+    initialRoute = 'login';
+  else
+    initialRoute = 'vendorspage';
+
+  // Create a Flutter Material app as usual
+  runApp(MyApp(initialRoute: initialRoute));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final String initialRoute;
+
+  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-        create: (context) => Geoservice(),
+          create: (context) => Geoservice(),
         ),
         ChangeNotifierProvider(
           create: (context) => Integration(),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginPage(),
+        initialRoute: initialRoute,
+        routes: {
+          'login': (context) => LoginPage(),
+          'vendorspage': (context) => VendorsPage(),
+        },
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey.shade100,
-          textTheme: TextTheme(
-
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-
-          )
+          textTheme: TextTheme(),
+          inputDecorationTheme: InputDecorationTheme(),
         ),
       ),
     );
