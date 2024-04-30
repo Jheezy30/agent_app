@@ -27,12 +27,17 @@ class Auth extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         print(response.data);
-        token = response.data['data']['bearer_token'];
-        print(token);
         user_id = response.data['data']['user']['id'];
         print(user_id);
+        
+        token = response.data['data']['bearer_token'];
+        print(token);
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('token', token);
+        
+        await prefs.remove('token');
+
         isLoading = false;
         notifyListeners();
 
@@ -46,4 +51,13 @@ class Auth extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<void> logout() async {
+  token = '';
+  user_id = ''; // Clear user ID as well
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove('token');
+  await prefs.remove('user_id'); // Remove user ID storage
+  // ... notify listeners about logout ...
+}
 }

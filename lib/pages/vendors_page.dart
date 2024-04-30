@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:agent_app/model/td.dart';
+import 'package:agent_app/pages/login_page.dart';
 import 'package:agent_app/services/momo_custom.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,6 @@ class _VendorsPageState extends State<VendorsPage> {
     isAmbassador = false;
     isLandTenureAgent = false;
     Provider.of<MomoCustom>(context, listen: false).clearMomos();
-
   }
 
   @override
@@ -86,25 +86,55 @@ class _VendorsPageState extends State<VendorsPage> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SvgPicture.asset(
-                  'images/logo.svg',
-                  semanticsLabel: 'korba Logo',
-                  height: 100,
-                  width: 100,
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: SvgPicture.asset(
+                              'images/logo.svg',
+                              semanticsLabel: 'korba Logo',
+                              height: 100,
+                              width: 100,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.logout),
+                          onPressed: () async {
+                            await auth.logout();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15, 
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "Register Agent",
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
-                  height: 25,
-                ),
-                Text(
-                  "Register Agent",
-                  style: TextStyle(
-                    color: Colors.grey.shade900,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
+                  height: 10,
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -191,7 +221,6 @@ class _VendorsPageState extends State<VendorsPage> {
                             ),
                           ),
                           onPressed: () {
-
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -203,16 +232,12 @@ class _VendorsPageState extends State<VendorsPage> {
                                     scrollDirection: Axis.vertical,
                                     child: Column(
                                       children: [
-                                      
-                                        
                                         MyTextFormField(
                                           controller: momosNumberController,
                                           labelText: "Momos Number",
                                           isRequired: true,
                                           isNumericOnly: true,
                                           validator: _nameValidator,
-                                         
-                                          
                                         ),
                                         const SizedBox(height: 15),
                                         MyDropDownButton(
@@ -220,7 +245,6 @@ class _VendorsPageState extends State<VendorsPage> {
                                           items: ['MTN', 'TELECEL', 'AT'],
                                           selectedValue: _networkType,
                                           validator: _nameValidator,
-
                                           onChanged: (value) {
                                             _networkType = value!;
                                             setState(() {
@@ -238,10 +262,14 @@ class _VendorsPageState extends State<VendorsPage> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                       TextButton(
+                                      TextButton(
                                         onPressed: () {
-                                          if(momosNumberController.text.isNotEmpty && _networkType.isNotEmpty){
-                                            momo.addMomo(momosNumberController.text, _networkType);
+                                          if (momosNumberController
+                                                  .text.isNotEmpty &&
+                                              _networkType.isNotEmpty) {
+                                            momo.addMomo(
+                                                momosNumberController.text,
+                                                _networkType);
                                           }
                                           Navigator.pop(context);
                                         },
@@ -287,29 +315,30 @@ class _VendorsPageState extends State<VendorsPage> {
                           height: 15,
                         ),
 
-                          Text('Added Momos:'),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                                          child: ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: momo.momos.length,
-                                            itemBuilder: (context, index) {
-                                              final item = momo.momos[index];
-                                              return ListTile(
-                                                title: Text(item.number),
-                                                subtitle: Text(item.network),
-                                                trailing: IconButton(
-                                                  onPressed: (){
-                                                    momo.deleteMomo(index);
-                                                  },
-                                                   icon: Icon(Icons.delete,
-                                                   color: CustomColors.customColor,
-                                                   ),
-                                                   ),
-                                              );
-                                            },
-                                          ),
-                                        ),
+                        Text('Added Momos:'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: momo.momos.length,
+                            itemBuilder: (context, index) {
+                              final item = momo.momos[index];
+                              return ListTile(
+                                title: Text(item.number),
+                                subtitle: Text(item.network),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    momo.deleteMomo(index);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: CustomColors.customColor,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),

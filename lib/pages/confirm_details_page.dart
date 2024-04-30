@@ -3,6 +3,7 @@ import 'package:agent_app/components/custom_table_row.dart';
 import 'package:agent_app/components/my_button.dart';
 import 'package:agent_app/pages/home_page.dart';
 import 'package:agent_app/pages/vendors_page.dart';
+import 'package:agent_app/services/auth.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
 import 'package:dio/dio.dart';
@@ -28,17 +29,16 @@ class ConfirmDetailsPage extends StatefulWidget {
 
 class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
   late Geoservice geo;
-   @override
-  void dispose() { 
+  @override
+  void dispose() {
     super.dispose();
-     Future.microtask(() {
+    Future.microtask(() {
       context.read<Geoservice>().stopListeningForLocationUpdates();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     final integrate = Provider.of<Integration>(context, listen: true);
     return Scaffold(
       body: Padding(
@@ -59,7 +59,9 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -69,9 +71,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
               height: 20,
             ),
             ElevatedButton(
-
               onPressed: () async {
-
                 bool myresult = await integrate.send(widget.user);
                 if (!myresult) {
                   showDialog(

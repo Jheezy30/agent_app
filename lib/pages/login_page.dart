@@ -45,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 100,
                       width: 100,
                     ),
+                  
                     const SizedBox(
                       height: 25,
                     ),
@@ -86,14 +87,25 @@ class _LoginPageState extends State<LoginPage> {
                             password: passwordController.text);
                         bool myresult = await auth.login(td);
                         if (!myresult) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => CustomAlertDialog(
-                              title: 'Operation Failed',
-                              message:
-                                  'An error occurred while performing the operation.',
-                            ),
-                          );
+                          if (!auth.isLoading) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CustomAlertDialog(
+                                title: 'Invalid Credentials',
+                                message:
+                                    'Please check your username and password and try again.',
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CustomAlertDialog(
+                                title: 'Login Failed',
+                                message:
+                                    'An error occurred during login. Please try again later.',
+                              ),
+                            );
+                          }
                         } else {
                           Navigator.push(
                             context,
@@ -113,9 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      
                       child: Container(
-                        width: 260, 
+                        width: 260,
                         padding: EdgeInsets.symmetric(vertical: 20),
                         alignment: Alignment.center,
                         child: auth.isLoading
@@ -123,7 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                   SizedBox(width: 10),
                                   Text(
