@@ -2,6 +2,7 @@ import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/components/custom_table_row.dart';
 import 'package:agent_app/components/my_button.dart';
 import 'package:agent_app/pages/home_page.dart';
+import 'package:agent_app/pages/vendors_page.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
 import 'package:dio/dio.dart';
@@ -13,10 +14,12 @@ import '../model/user.dart';
 
 class ConfirmDetailsPage extends StatefulWidget {
   final User user;
+  final Function clearControllers;
 
   ConfirmDetailsPage({
     super.key,
     required this.user,
+    required this.clearControllers,
   });
 
   @override
@@ -24,12 +27,19 @@ class ConfirmDetailsPage extends StatefulWidget {
 }
 
 class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
-  bool _isLoading = false;
   late Geoservice geo;
+   @override
+  void dispose() { 
+    super.dispose();
+     Future.microtask(() {
+      context.read<Geoservice>().stopListeningForLocationUpdates();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final integration = Provider.of<Integration>(context, listen: false);
+
+    final integrate = Provider.of<Integration>(context, listen: true);
     return Scaffold(
       body: Padding(
         padding:
@@ -59,70 +69,75 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
               height: 20,
             ),
             ElevatedButton(
-                      onPressed: () async {
-                       
-                        bool myresult = await integration.send(widget.user);
-                        if (!myresult) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => CustomAlertDialog(
-                              title: 'Operation Failed',
-                              message:
-                                  'An error occurred while performing the operation.',
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(),
-                            ),
-                          );
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          CustomColors.customColor,
-                        ),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                      ),
-                      
-                      child: Container(
-                        width: 260, 
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        alignment: Alignment.center,
-                        child: integration.isLoading
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    "Registering...",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Text(
-                                "Register",
-                                style: TextStyle(
-                                  color: Colors.grey.shade100,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                      ),
+
+              onPressed: () async {
+
+                bool myresult = await integrate.send(widget.user);
+                if (!myresult) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CustomAlertDialog(
+                      title: 'Operation Failed',
+                      message:
+                          'An error occurred while performing the operation.',
                     ),
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CustomAlertDialog(
+                      title: 'Success',
+                      message: 'Agent is registered successfully',
+                    ),
+                  ).then((_) {
+                    widget.clearControllers();
+                    Navigator.pushReplacementNamed(context, 'vendorspage');
+                  });
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  CustomColors.customColor,
+                ),
+                shape: MaterialStateProperty.all<OutlinedBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
+              child: Container(
+                width: 260,
+                padding: EdgeInsets.symmetric(vertical: 20),
+                alignment: Alignment.center,
+                child: integrate.isLoading
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "Registering...",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        "Register",
+                        style: TextStyle(
+                          color: Colors.grey.shade100,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+              ),
+            ),
             const SizedBox(
               height: 10,
             ),

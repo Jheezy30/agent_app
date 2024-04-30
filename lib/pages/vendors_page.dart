@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:agent_app/model/td.dart';
+import 'package:agent_app/services/momo_custom.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -58,27 +59,28 @@ class _VendorsPageState extends State<VendorsPage> {
     return null;
   }
 
-  void saveModel() {
-    String momoNumber = momosNumberController.text;
-    String networkType = _networkType;
+  void clearControllers() {
+    nameController.clear();
+    businessNameController.clear();
+    businessRegistrationNumberController.clear();
+    contactController.clear();
+    idNumberController.clear();
+    momosNumberController.clear();
+    _zone = '';
+    _networkType = '';
+    _idType = '';
+    isAmbassador = false;
+    isLandTenureAgent = false;
+    Provider.of<MomoCustom>(context, listen: false).clearMomos();
 
-    if (momoNumber.isNotEmpty & networkType.isNotEmpty) {
-      Momo momo = Momo(number: momoNumber, network: networkType);
-
-      setState(() {
-        momos.add(momo);
-      });
-      momosNumberController.clear();
-      _networkType = '';
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
     String currentId = auth.user_id;
-    return Consumer<Geoservice>(
-      builder: (__, geoservice, _) => Scaffold(
+    return Consumer2<Geoservice, MomoCustom>(
+      builder: (__, geoservice, momo, _) => Scaffold(
         body: Padding(
           padding: const EdgeInsets.only(top: 75),
           child: Form(
@@ -174,7 +176,7 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
 
                         const SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
 
                         ElevatedButton(
@@ -185,87 +187,95 @@ class _VendorsPageState extends State<VendorsPage> {
                                   vertical: 25.0, horizontal: 100.0),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                CustomColors.customColor),
-                          ),
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                'momos',
-                              ),
-                              content: Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.vertical,
-                                  child: Column(
-                                    children: [
-                                      //the tex form for entering the number
-                                      MyTextFormField(
-                                        controller: momosNumberController,
-                                        labelText: "Momos Number",
-                                        isRequired: true,
-                                        isNumericOnly: true,
-                                        validator: _nameValidator,
-                                      ),
-
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-
-                                      MyDropDownButton(
-                                        items: ['MTN', 'TELECEL', 'AT'],
-                                        selectedValue: _networkType,
-                                        validator: _nameValidator,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _networkType = value!;
-                                          });
-                                        },
-                                        hintText: 'Momos Network',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              actions: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        saveModel();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        'save',
-                                        style: TextStyle(
-                                          color: CustomColors.customColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        'cancel',
-                                        style: TextStyle(
-                                          color: CustomColors.customColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                              insetPadding: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.width * 0.1,
-                              ),
+                              CustomColors.customColor,
                             ),
                           ),
+                          onPressed: () {
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('MOMO Number Details'),
+                                content: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: Column(
+                                      children: [
+                                      
+                                        
+                                        MyTextFormField(
+                                          controller: momosNumberController,
+                                          labelText: "Momos Number",
+                                          isRequired: true,
+                                          isNumericOnly: true,
+                                          validator: _nameValidator,
+                                         
+                                          
+                                        ),
+                                        const SizedBox(height: 15),
+                                        MyDropDownButton(
+                                          isRequired: true,
+                                          items: ['MTN', 'TELECEL', 'AT'],
+                                          selectedValue: _networkType,
+                                          validator: _nameValidator,
+
+                                          onChanged: (value) {
+                                            _networkType = value!;
+                                            setState(() {
+                                              _networkType = _networkType;
+                                            });
+                                          },
+                                          hintText: 'Momos Network',
+                                        ),
+                                        const SizedBox(height: 15),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                       TextButton(
+                                        onPressed: () {
+                                          if(momosNumberController.text.isNotEmpty && _networkType.isNotEmpty){
+                                            momo.addMomo(momosNumberController.text, _networkType);
+                                          }
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'ok',
+                                          style: TextStyle(
+                                            color: CustomColors.customColor,
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          'cancel',
+                                          style: TextStyle(
+                                            color: CustomColors.customColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                                insetPadding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                ),
+                              ),
+                            );
+                          },
                           child: Text(
-                            "Select momo",
+                            "Add Momo number",
                             style: TextStyle(
                               color: Colors.grey.shade100,
                               fontSize: 16.0,
@@ -276,6 +286,31 @@ class _VendorsPageState extends State<VendorsPage> {
                         const SizedBox(
                           height: 15,
                         ),
+
+                          Text('Added Momos:'),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: momo.momos.length,
+                                            itemBuilder: (context, index) {
+                                              final item = momo.momos[index];
+                                              return ListTile(
+                                                title: Text(item.number),
+                                                subtitle: Text(item.network),
+                                                trailing: IconButton(
+                                                  onPressed: (){
+                                                    momo.deleteMomo(index);
+                                                  },
+                                                   icon: Icon(Icons.delete,
+                                                   color: CustomColors.customColor,
+                                                   ),
+                                                   ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SwitchListTile(
@@ -335,8 +370,13 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
                         MyButton(
                           onTap: () {
-                            if (_formKey.currentState!.validate()) {
+                            if (_formKey.currentState!.validate() &&
+                                nameController.text.isNotEmpty &&
+                                contactController.text.isNotEmpty &&
+                                momosNumberController.text.isNotEmpty &&
+                                _networkType.isNotEmpty) {
                               _formKey.currentState!.save();
+
                               final user = User(
                                 user_id: currentId,
                                 name: nameController.text,
@@ -355,7 +395,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                     ? idNumberController.text
                                     : null,
                                 id_type: _idType,
-                                momos: momos,
+                                momos: momo.momos,
                                 is_ambassador: isAmbassador,
                                 is_land_tenure_agent: isLandTenureAgent,
                                 zone: _zone,
@@ -370,7 +410,8 @@ class _VendorsPageState extends State<VendorsPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ConfirmDetailsPage(
-                                    user: user!,
+                                    user: user,
+                                    clearControllers: clearControllers,
                                   ),
                                 ),
                               );

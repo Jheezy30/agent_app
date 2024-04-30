@@ -1,5 +1,6 @@
 import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/model/momo.dart';
+import 'package:agent_app/services/momo_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class _CustomTableRowState extends State<CustomTableRow> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Geoservice>(builder: (__, geo, _) {
+    return Consumer2<Geoservice,MomoCustom>(builder: (__, geo,momo, _) {
       if (geo.isLoading) {
         return Center(
           child: CircularProgressIndicator(
@@ -120,7 +121,47 @@ class _CustomTableRowState extends State<CustomTableRow> {
               ),
             ],
           ),
-          SizedBox(height: 50), // Space between tables
+          SizedBox(height: 50),
+          
+           Table(
+            textDirection: TextDirection.ltr,
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            border: TableBorder(
+              bottom: BorderSide(
+                color: Colors.grey.shade300,
+                width: 1.0,
+              ),
+              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+            ),
+            children: [
+              TableRow(children: [
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      "Momos Details",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  verticalAlignment: TableCellVerticalAlignment.middle,
+                ),
+                SizedBox(), // Spacer for the second cell in the header row
+              ]),
+             ...List.generate(momo.momos.length, (index) {
+                 final item = momo.momos[index];
+                return confirmationTableRow(title:item.network , info: item.number);
+              }),
+            ],
+          ),
+
+          const SizedBox(
+            height:50,
+          ),
+          
+           // Space between tables
           Table(
             textDirection: TextDirection.ltr,
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -149,10 +190,7 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 SizedBox(), // Spacer for the second cell in the header row
               ]),
              
-              ...List.generate(widget.user.momos.length, (index) {
-                Momo momo = widget.user.momos[index];
-                return confirmationTableRow(title: momo.network, info: momo.number);
-              }),
+             
               confirmationTableRow(
                 title: 'isAmbassador',
                 info: '${widget.user.is_ambassador}',

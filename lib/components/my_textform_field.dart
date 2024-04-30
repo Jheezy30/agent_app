@@ -8,6 +8,7 @@ class MyTextFormField extends StatelessWidget {
   final bool isNumericOnly;
   final bool isObsecureText;
   final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
 
   const MyTextFormField({
     super.key, 
@@ -17,6 +18,7 @@ class MyTextFormField extends StatelessWidget {
     this.isNumericOnly = false,
     this.isObsecureText = false,
      this.validator,
+     this.onSaved,
     });
 
   @override
@@ -55,6 +57,7 @@ class MyTextFormField extends StatelessWidget {
 
           return null;
         },
+        onSaved: onSaved,
       ),
     );
   }

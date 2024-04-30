@@ -13,15 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void dispose() {
-
-    
-    super.dispose();
-     Future.microtask(() {
-      context.read<Geoservice>().stopListeningForLocationUpdates();
-    });
-  }
+ 
   
   @override
   Widget build(BuildContext context) {

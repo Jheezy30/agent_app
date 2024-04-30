@@ -1,4 +1,5 @@
 import 'package:agent_app/pages/vendors_page.dart';
+import 'package:agent_app/services/momo_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,7 @@ void main() async {
 
   // Read token
    String? token = prefs.getString('token');
+   print(token);
 
   // Use Dart's null safety operator
   if (token?.isEmpty ?? true)
@@ -47,6 +49,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Auth(),
+        ),
+         ChangeNotifierProvider(
+          create: (context) => MomoCustom(),
         ),
       ],
       child: MaterialApp(

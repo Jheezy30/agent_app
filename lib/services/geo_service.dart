@@ -38,7 +38,7 @@ class Geoservice extends ChangeNotifier {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     } else if (permission == LocationPermission.deniedForever) {
-      // Handle denied forever case
+      openAppSettings();
     } else {
       try {
         final LocationSettings locationSettings = LocationSettings(
@@ -59,6 +59,7 @@ class Geoservice extends ChangeNotifier {
       }
     }
   }
+
 
   void cancelSubscription() {
     positionStreamSubscription?.cancel();

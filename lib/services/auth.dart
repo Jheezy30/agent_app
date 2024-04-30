@@ -28,6 +28,7 @@ class Auth extends ChangeNotifier {
       if (response.statusCode == 200) {
         print(response.data);
         token = response.data['data']['bearer_token'];
+        print(token);
         user_id = response.data['data']['user']['id'];
         print(user_id);
         SharedPreferences prefs = await SharedPreferences.getInstance();
