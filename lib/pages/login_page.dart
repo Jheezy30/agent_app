@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:agent_app/components/custom_alert_dialogue.dart';
+import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/components/my_textform_field.dart';
 import 'package:agent_app/model/td.dart';
 import 'package:agent_app/pages/vendors_page.dart';
 import 'package:agent_app/services/auth.dart';
-import 'package:agent_app/components/custom_color.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -45,13 +45,13 @@ class _LoginPageState extends State<LoginPage> {
                       height: 100,
                       width: 100,
                     ),
-                  
+
                     const SizedBox(
                       height: 25,
                     ),
                     // welcome back message
                     Text(
-                      "Login Agent",
+                      "Login Td",
                       style: TextStyle(
                         color: Colors.grey.shade900,
                         fontSize: 20,
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                          CustomColors.customColor,
+                          CustomColors.customColor.shade800,
                         ),
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
@@ -127,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Container(
                         width: 260,
+                        height: 70,
                         padding: EdgeInsets.symmetric(vertical: 20),
                         alignment: Alignment.center,
                         child: auth.isLoading
@@ -134,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
+
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.white),
                                   ),
@@ -143,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                      fontSize: 15,
                                     ),
                                   ),
                                 ],
@@ -153,29 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                   color: Colors.grey.shade100,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 15,
                                 ),
                               ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      "Forgot PIN?",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      "Create Account",
-                      style: TextStyle(
-                        color: Colors.grey.shade900,
-                        fontSize: 16,
                       ),
                     ),
                   ],

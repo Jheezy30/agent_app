@@ -11,6 +11,7 @@ import '../components/custom_color.dart';
 import '../components/my_button.dart';
 import '../components/my_drop_down_button.dart';
 import '../components/my_textform_field.dart';
+import '../components/text_divider.dart';
 import '../model/momo.dart';
 import '../model/user.dart';
 import '../pages/confirm_details_page.dart';
@@ -119,7 +120,7 @@ class _VendorsPageState extends State<VendorsPage> {
                       ],
                     ),
                     const SizedBox(
-                      height: 15, 
+                      height: 15,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -145,46 +146,40 @@ class _VendorsPageState extends State<VendorsPage> {
                         const SizedBox(
                           height: 50,
                         ),
+                        TextDivider(
+                          text: 'Personal Details',
+
+                          width: 350,
+                          height: 1,
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade900,
+                          ),
+                          padding: EdgeInsets.only(left: 8, top: 8),
+                        ),
+                        const SizedBox(height: 10,),
+
                         MyTextFormField(
                           controller: nameController,
-                          labelText: "name",
+                          labelText: "Name",
                           isRequired: true,
                           validator: _nameValidator,
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        // business name
-                        MyTextFormField(
-                          controller: businessNameController,
-                          labelText: "Business name",
-                        ),
-
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // business_registration_number
-                        MyTextFormField(
-                          controller: businessRegistrationNumberController,
-                          labelText: "Business Registration Number",
-                          isNumericOnly: true,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-
-                        // contact
                         MyTextFormField(
                           controller: contactController,
-                          labelText: "contact",
+                          labelText: "Contact",
                           isRequired: true,
                           isNumericOnly: true,
                         ),
+                        // business name
 
                         const SizedBox(
                           height: 10,
                         ),
-
                         MyDropDownButton(
                           items: ['Ghana Card', 'Driver License'],
                           selectedValue: _idType,
@@ -195,9 +190,8 @@ class _VendorsPageState extends State<VendorsPage> {
                           },
                           hintText: 'Id Type',
                         ),
-
                         const SizedBox(
-                          height: 15,
+                          height: 10,
                         ),
                         //id_number
                         MyTextFormField(
@@ -206,25 +200,76 @@ class _VendorsPageState extends State<VendorsPage> {
                         ),
 
                         const SizedBox(
-                          height: 15,
+                          height: 25,
                         ),
+
+                        TextDivider(
+                          text: 'Business Details',
+
+                          width: 350,
+                          height: 1,
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade900,
+                          ),
+                          padding: EdgeInsets.only(left: 8, top: 8),
+                        ),
+
+
+
+                        const SizedBox(
+                          height: 10,
+                        ),
+
+                        MyTextFormField(
+                          controller: businessNameController,
+                          labelText: "Business Name",
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+
+                        MyTextFormField(
+                          controller: businessRegistrationNumberController,
+                          labelText: "Business Registration Number",
+                          isNumericOnly: true,
+                        ),
+
+                        const SizedBox(
+                          height: 25,
+                        ),
+
+                        TextDivider(
+                          text: 'Momos Details',
+
+                          width: 350,
+                          height: 1,
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade900,
+                          ),
+                          padding: EdgeInsets.only(left: 8, top: 8),
+                        ),
+                        const SizedBox(height: 10,),
 
                         ElevatedButton(
                           style: ButtonStyle(
                             padding:
                                 MaterialStateProperty.all<EdgeInsetsGeometry>(
                               EdgeInsets.symmetric(
-                                  vertical: 25.0, horizontal: 100.0),
+                                  vertical: 20.0, horizontal: 100.0),
                             ),
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              CustomColors.customColor,
+                              CustomColors.customColor.shade800,
                             ),
                           ),
                           onPressed: () {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text('MOMO Number Details'),
+                                title: Text('MOMO Numbers Details'),
                                 content: Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.9,
@@ -303,10 +348,10 @@ class _VendorsPageState extends State<VendorsPage> {
                             );
                           },
                           child: Text(
-                            "Add Momo number",
+                            "Add Momo Number",
                             style: TextStyle(
                               color: Colors.grey.shade100,
-                              fontSize: 16.0,
+                              fontSize: 15.0,
                             ),
                           ),
                         ),
@@ -340,13 +385,28 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
                         ),
 
+                        const SizedBox(height: 25,),
+
+                        TextDivider(
+                          text: 'Other Details',
+
+                          width: 350,
+                          height: 1,
+                          textStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade900,
+                          ),
+                          padding: EdgeInsets.only(left: 8, top: 8),
+                        ),
+
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: SwitchListTile(
                               value: isAmbassador,
                               activeTrackColor: CustomColors.customColor,
                               inactiveTrackColor: Colors.grey.shade300,
-                              title: Text('isAmbassdor'),
+                              title: Text('IsAmbassdor'),
                               onChanged: (value) {
                                 setState(() {
                                   isAmbassador = value;
@@ -364,7 +424,7 @@ class _VendorsPageState extends State<VendorsPage> {
                               value: isLandTenureAgent,
                               activeTrackColor: CustomColors.customColor,
                               inactiveTrackColor: Colors.grey.shade300,
-                              title: Text('isLandTenureAgent'),
+                              title: Text('IsLandTenureAgent'),
                               onChanged: (value) {
                                 setState(() {
                                   isLandTenureAgent = value;
@@ -455,7 +515,7 @@ class _VendorsPageState extends State<VendorsPage> {
                               );
                             }
                           },
-                          text: 'Confirm details',
+                          text: 'Confirm Details',
                         ),
 
                         const SizedBox(
