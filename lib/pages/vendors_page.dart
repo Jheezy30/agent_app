@@ -524,7 +524,7 @@ class _VendorsPageState extends State<VendorsPage> {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

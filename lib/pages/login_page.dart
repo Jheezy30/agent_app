@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     // welcome back message
                     Text(
-                      "Login Td",
+                      "Login",
                       style: TextStyle(
                         color: Colors.grey.shade900,
                         fontSize: 20,

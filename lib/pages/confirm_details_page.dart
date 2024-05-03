@@ -70,72 +70,87 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton(
-              onPressed: () async {
-                bool myresult = await integrate.send(widget.user);
-                if (!myresult) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => CustomAlertDialog(
-                      title: 'Operation Failed',
-                      message:
+            Align(
+              alignment:Alignment.center,
+              child: ElevatedButton(
+                onPressed: () async {
+                  bool myresult = await integrate.send(widget.user);
+                  if (!myresult) {
+                    if (!integrate.isLoading) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => CustomAlertDialog(
+                          title: 'Credentials already exist.',
+                          message:
+                          'The wallet number has already been assigned',
+                        ),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) => CustomAlertDialog(
+                          title: 'Operation failed',
+                          message:
                           'An error occurred while performing the operation.',
+                        ),
+                      );
+                    }
+                  }  else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => CustomAlertDialog(
+                        title: 'Success',
+                        message: 'Agent is registered successfully',
+                      ),
+                    ).then((_) {
+                      widget.clearControllers();
+                      Navigator.pushReplacementNamed(context, 'vendorspage');
+                    });
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    CustomColors.customColor,
+                  ),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) => CustomAlertDialog(
-                      title: 'Success',
-                      message: 'Agent is registered successfully',
-                    ),
-                  ).then((_) {
-                    widget.clearControllers();
-                    Navigator.pushReplacementNamed(context, 'vendorspage');
-                  });
-                }
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  CustomColors.customColor,
-                ),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-              ),
-              child: Container(
-                width: 260,
-                padding: EdgeInsets.symmetric(vertical: 20),
-                alignment: Alignment.center,
-                child: integrate.isLoading
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Registering...",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                child: Container(
+                  width: 260,
+                  height: 70,
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  alignment: Alignment.center,
+                  child: integrate.isLoading
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
+                            SizedBox(width: 10),
+                            Text(
+                              "Registering...",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          "Register",
+                          style: TextStyle(
+                            color: Colors.grey.shade100,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
                           ),
-                        ],
-                      )
-                    : Text(
-                        "Register",
-                        style: TextStyle(
-                          color: Colors.grey.shade100,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
                         ),
-                      ),
+                ),
               ),
             ),
             const SizedBox(
