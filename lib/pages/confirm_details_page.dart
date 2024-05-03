@@ -110,7 +110,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    CustomColors.customColor,
+                    CustomColors.customColor.shade800,
                   ),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
