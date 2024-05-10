@@ -87,25 +87,14 @@ class _LoginPageState extends State<LoginPage> {
                             password: passwordController.text);
                         bool myresult = await auth.login(td);
                         if (!myresult) {
-                          if (!auth.isLoading) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => CustomAlertDialog(
-                                title: 'Invalid Credentials',
-                                message:
-                                    'Please check your username and password and try again.',
-                              ),
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => CustomAlertDialog(
-                                title: 'Login Failed',
-                                message:
-                                    'An error occurred during login. Please try again later.',
-                              ),
-                            );
-                          }
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              title: 'Invalid Credentials',
+                              message:
+                                  'Please check your username and password and try again.',
+                            ),
+                          );
                         } else {
                           Navigator.push(
                             context,
@@ -135,7 +124,6 @@ class _LoginPageState extends State<LoginPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
-
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.white),
                                   ),

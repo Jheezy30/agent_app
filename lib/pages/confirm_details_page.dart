@@ -43,7 +43,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
     return Scaffold(
       body: Padding(
         padding:
-            const EdgeInsets.only(top: 50, left: 25, right: 25, bottom: 20),
+        const EdgeInsets.only(top: 50, left: 25, right: 25, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -71,31 +71,22 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
               height: 20,
             ),
             Align(
-              alignment:Alignment.center,
+              alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () async {
-                  bool myresult = await integrate.send(widget.user);
-                  if (!myresult) {
-                    if (!integrate.isLoading) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => CustomAlertDialog(
-                          title: 'Credentials already exist.',
-                          message:
-                          'The wallet number has already been assigned',
-                        ),
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) => CustomAlertDialog(
-                          title: 'Operation failed',
-                          message:
-                          'An error occurred while performing the operation.',
-                        ),
-                      );
-                    }
-                  }  else {
+                  // Call send method and handle response
+                  final response = await integrate.send(widget.user);
+                  if (!response.success) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => CustomAlertDialog(
+                        title: 'Operation failed',
+                        message: 'the Agent was not  registered' ??
+                            'An error occurred while performing the operation.', // Use response message or default
+                      ),
+                    );
+                  } else {
+                    // Handle successful registration (consider adding more logic here)
                     showDialog(
                       context: context,
                       builder: (context) => CustomAlertDialog(
@@ -105,6 +96,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                     ).then((_) {
                       widget.clearControllers();
                       Navigator.pushReplacementNamed(context, 'vendorspage');
+                      // Potentially fetch updated data or perform other actions
                     });
                   }
                 },
@@ -125,31 +117,30 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                   alignment: Alignment.center,
                   child: integrate.isLoading
                       ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              "Registering...",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Text(
-                          "Register",
-                          style: TextStyle(
-                            color: Colors.grey.shade100,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Registering...",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
+                      ),
+                    ],
+                  )
+                      : Text(
+                    "Register",
+                    style: TextStyle(
+                      color: Colors.grey.shade100,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
               ),
             ),

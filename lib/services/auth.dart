@@ -35,8 +35,7 @@ class Auth extends ChangeNotifier {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('token', token);
-        
-        await prefs.remove('token');
+
 
         isLoading = false;
         notifyListeners();
