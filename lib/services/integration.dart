@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/custom_alert_dialogue.dart';
 import '../model/user.dart';
-import '../pages/home_page.dart';
 
 class Integration extends ChangeNotifier {
   bool isLoading = false;
@@ -16,7 +14,8 @@ class Integration extends ChangeNotifier {
   // Getter for token
   String? get token => _token;
 
-  Future<SendMessageResponse> send(User user) async {
+  Future<void> send(User user, BuildContext context,
+      {required Function onSuccess}) async {
     isLoading = true;
     notifyListeners();
 
@@ -65,33 +64,41 @@ class Integration extends ChangeNotifier {
       // Handle the API response based on success field
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = response.data;
-        success = responseData['success']; // Check for the actual 'success' field
+        success =
+            responseData['success']; // Check for the actual 'success' field
         message = responseData['message'];
         print(response.data);
 
         isLoading = false;
         notifyListeners();
         print(success);
-
-        return SendMessageResponse(success: success, message: message);
+        if (success) {
+          onSuccess();
+        }
       } else {
         isLoading = false;
         notifyListeners();
-        return SendMessageResponse(success: false, message: 'The wallet number has already been assigned'); // Set default message for non-200 status codes
+        if (!success) {
+          showDialog(
+            context: context,
+            builder: (context) => CustomAlertDialog(
+              title: 'Wallet Assigned',
+              message: 'The wallet number has already been assigned',
+            ),
+          );
+        }
       }
     } catch (e) {
       isLoading = false;
       notifyListeners();
-      print('Error occurred: $e');
-      return SendMessageResponse(success: false, message: 'Error: $e'); // Include error message in case of exception
+      showDialog(
+        context: context,
+        builder: (context) => CustomAlertDialog(
+          title: 'Wallet Assigned',
+          message: 'The wallet number has already been assigned',
+        ),
+      );
+      // Include error message in case of exception
     }
   }
-}
-
-// Define a new class to hold the response data
-class SendMessageResponse {
-  final bool success;
-  final String message;
-
-  SendMessageResponse({required this.success, required this.message});
 }

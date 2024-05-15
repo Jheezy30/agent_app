@@ -1,12 +1,7 @@
 import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/components/custom_table_row.dart';
-import 'package:agent_app/components/my_button.dart';
-import 'package:agent_app/pages/home_page.dart';
-import 'package:agent_app/pages/vendors_page.dart';
-import 'package:agent_app/services/auth.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:agent_app/services/integration.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +24,7 @@ class ConfirmDetailsPage extends StatefulWidget {
 
 class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
   late Geoservice geo;
+
   @override
   void dispose() {
     super.dispose();
@@ -43,7 +39,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
     return Scaffold(
       body: Padding(
         padding:
-        const EdgeInsets.only(top: 50, left: 25, right: 25, bottom: 20),
+            const EdgeInsets.only(top: 50, left: 25, right: 25, bottom: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -72,75 +68,46 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
             ),
             Align(
               alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Call send method and handle response
-                  final response = await integrate.send(widget.user);
-                  if (!response.success) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => CustomAlertDialog(
-                        title: 'Operation failed',
-                        message: 'the Agent was not  registered' ??
-                            'An error occurred while performing the operation.', // Use response message or default
-                      ),
-                    );
-                  } else {
-                    // Handle successful registration (consider adding more logic here)
-                    showDialog(
-                      context: context,
-                      builder: (context) => CustomAlertDialog(
-                        title: 'Success',
-                        message: 'Agent is registered successfully',
-                      ),
-                    ).then((_) {
-                      widget.clearControllers();
-                      Navigator.pushReplacementNamed(context, 'vendorspage');
-                      // Potentially fetch updated data or perform other actions
-                    });
-                  }
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    CustomColors.customColor.shade800,
-                  ),
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                ),
-                child: Container(
-                  width: 260,
-                  height: 70,
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  alignment: Alignment.center,
-                  child: integrate.isLoading
-                      ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Registering...",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
+              child: SizedBox(
+                height: 60,
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await integrate.send(widget.user, context, onSuccess: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => CustomAlertDialog(
+                          title: 'Success',
+                          message: 'Agent is registered successfully',
                         ),
+                      ).then((_) {
+                        widget.clearControllers();
+                        Navigator.pushReplacementNamed(context, 'vendorspage');
+                      });
+                    });
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      CustomColors.customColor.shade800,
+                    ),
+                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ],
-                  )
-                      : Text(
-                    "Register",
-                    style: TextStyle(
-                      color: Colors.grey.shade100,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
                     ),
                   ),
+                  child: integrate.isLoading
+                      ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : Text(
+                          "Register",
+                          style: TextStyle(
+                            color: Colors.grey.shade100,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
                 ),
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:agent_app/model/td.dart';
 import 'package:agent_app/pages/vendors_page.dart';
 import 'package:agent_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
 
@@ -62,8 +63,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     // email textfield
                     MyTextFormField(
-                      controller: userNameController,
-                      labelText: "User Name",
+                      controller: emailController,
+                      labelText: "Email",
                       isRequired: true,
                     ),
                     const SizedBox(
@@ -80,74 +81,66 @@ class _LoginPageState extends State<LoginPage> {
                       height: 25,
                     ),
                     // sign in button
-                    ElevatedButton(
-                      onPressed: () async {
-                        final td = TD(
-                            username: userNameController.text,
-                            password: passwordController.text);
-                        bool myresult = await auth.login(td);
-                        if (!myresult) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => CustomAlertDialog(
-                              title: 'Invalid Credentials',
-                              message:
-                                  'Please check your username and password and try again.',
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VendorsPage(),
-                            ),
-                          );
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          CustomColors.customColor.shade800,
-                        ),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
+                SizedBox(
+                  width: 250,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final td = TD(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+                      await auth.login(td, context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        CustomColors.customColor.shade800,
                       ),
-                      child: Container(
-                        width: 260,
-                        height: 70,
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        alignment: Alignment.center,
-                        child: auth.isLoading
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    "Signing In...",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Text(
-                                "Sign In",
-                                style: TextStyle(
-                                  color: Colors.grey.shade100,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
                     ),
+                    child: auth.isLoading
+                        ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                        : Text(
+                      "Sign In",
+                      style: TextStyle(
+                        color: Colors.grey.shade100,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                const SizedBox(height: 25,),
+
+                    Consumer<Auth>(
+                      builder: (context, auth, child) {
+                        return GestureDetector(
+                          onTap: () async {
+                            await auth.resetPassword(context, emailController.text);
+                          },
+                          child: auth.isResetting
+                              ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                              : Text(
+                            "Reset Password",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+
                   ],
                 ),
               ),

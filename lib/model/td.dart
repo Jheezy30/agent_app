@@ -2,19 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TD {
-  final String username;
+  final String email;
   final String password;
   
 
   TD({
-    required this.username,
+    required this.email,
     required this.password,
    
   });
 
   factory TD.fromJson(Map<String, dynamic> json) {
     return TD(
-      username: json['username'],
+      email: json['email'],
       password: json['password'],
      
     );
@@ -22,7 +22,7 @@ class TD {
 
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
+      'email': email,
       'password': password,
     };
   }
