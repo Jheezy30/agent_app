@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/custom_alert_dialogue.dart';
 import '../model/user.dart';
+import 'Apis.dart';
 
 class Integration extends ChangeNotifier {
   bool isLoading = false;
@@ -51,7 +52,7 @@ class Integration extends ChangeNotifier {
       );
 
       Response response = await dio.post(
-        'https://srrw9ss6bj.execute-api.eu-west-1.amazonaws.com/dev/api/add/vendors',
+        Apis.addVendors,
         data: user.toJson(),
         options: Options(
           headers: {
