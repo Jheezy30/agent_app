@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/user.dart';
-import '../services/geo_service.dart';
 
 class CustomTableRow extends StatefulWidget {
   final User user;
@@ -18,23 +17,8 @@ class CustomTableRow extends StatefulWidget {
 
 class _CustomTableRowState extends State<CustomTableRow> {
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      context.read<Geoservice>().search();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer2<Geoservice,MomoCustom>(builder: (__, geo,momo, _) {
-      if (geo.isLoading) {
-        return Center(
-          child: CircularProgressIndicator(
-             valueColor: AlwaysStoppedAnimation<Color>(CustomColors.customColor),
-          ),
-        );
-      }
+    return Consumer<MomoCustom>(builder: (__, momo, _) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,7 +30,8 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 color: Colors.grey.shade300,
                 width: 1.0,
               ),
-              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+              horizontalInside:
+                  BorderSide(color: Colors.grey.shade300, width: 1.0),
             ),
             children: [
               TableRow(children: [
@@ -88,7 +73,8 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 color: Colors.grey.shade300,
                 width: 1.0,
               ),
-              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+              horizontalInside:
+                  BorderSide(color: Colors.grey.shade300, width: 1.0),
             ),
             children: [
               TableRow(children: [
@@ -122,8 +108,8 @@ class _CustomTableRowState extends State<CustomTableRow> {
             ],
           ),
           SizedBox(height: 50),
-          
-           Table(
+
+          Table(
             textDirection: TextDirection.ltr,
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             border: TableBorder(
@@ -131,7 +117,8 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 color: Colors.grey.shade300,
                 width: 1.0,
               ),
-              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+              horizontalInside:
+                  BorderSide(color: Colors.grey.shade300, width: 1.0),
             ),
             children: [
               TableRow(children: [
@@ -150,18 +137,19 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 ),
                 SizedBox(), // Spacer for the second cell in the header row
               ]),
-             ...List.generate(momo.momos.length, (index) {
-                 final item = momo.momos[index];
-                return confirmationTableRow(title:item.network , info: item.number);
+              ...List.generate(momo.momos.length, (index) {
+                final item = momo.momos[index];
+                return confirmationTableRow(
+                    title: item.network, info: item.number);
               }),
             ],
           ),
 
           const SizedBox(
-            height:50,
+            height: 50,
           ),
-          
-           // Space between tables
+
+          // Space between tables
           Table(
             textDirection: TextDirection.ltr,
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -170,7 +158,8 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 color: Colors.grey.shade300,
                 width: 1.0,
               ),
-              horizontalInside: BorderSide(color: Colors.grey.shade300, width: 1.0),
+              horizontalInside:
+                  BorderSide(color: Colors.grey.shade300, width: 1.0),
             ),
             children: [
               TableRow(children: [
@@ -189,8 +178,6 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 ),
                 SizedBox(), // Spacer for the second cell in the header row
               ]),
-             
-             
               confirmationTableRow(
                 title: 'isAmbassador',
                 info: '${widget.user.is_ambassador}',
@@ -201,31 +188,23 @@ class _CustomTableRowState extends State<CustomTableRow> {
               ),
               confirmationTableRow(
                 title: 'Longitude',
-                info: '${geo.currentPosition?.longitude ?? 'N/A'}',
+                info: '${widget.user.longitude}',
               ),
               confirmationTableRow(
                 title: 'Latitude',
-                info: '${geo.currentPosition?.latitude ?? 'N/A'}',
+                info: '${widget.user.latitude}',
               ),
               confirmationTableRow(
-                title: 'Address',
-                info: '${geo.address ?? 'N/A'}',
+                title: 'Zone',
+                info: '${widget.user.zone}',
               ),
               confirmationTableRow(
-                title: 'location',
-                info: '${geo.location ?? 'N/A'}',
+                title: 'Location',
+                info: '${widget.user.location}',
               ),
               confirmationTableRow(
                 title: 'Region',
-                info: '${geo.region ?? 'N/A'}',
-              ),
-              confirmationTableRow(
-                title: 'Municipality',
-                info: '${geo.district ?? 'N/A'}',
-              ),
-              confirmationTableRow(
-                title: 'Suburb',
-                info: '${geo.town ?? 'N/A'}',
+                info: '${widget.user.region}',
               ),
             ],
           ),

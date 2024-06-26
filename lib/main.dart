@@ -19,8 +19,8 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // Read token
-   String? token = prefs.getString('token');
-   print(token);
+  String? token = prefs.getString('token');
+  print(token);
 
   // Use Dart's null safety operator
   if (token?.isEmpty ?? true)
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => MomoCustom(),
         ),
       ],
@@ -64,7 +64,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey.shade100,
           textTheme: TextTheme(),
-          inputDecorationTheme: InputDecorationTheme(),
+          inputDecorationTheme: InputDecorationTheme(isDense: true),
+        
+          dropdownMenuTheme: DropdownMenuThemeData(
+            inputDecorationTheme: InputDecorationTheme(isDense: false),
+          ),
         ),
       ),
     );

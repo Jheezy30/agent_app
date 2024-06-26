@@ -81,66 +81,68 @@ class _LoginPageState extends State<LoginPage> {
                       height: 25,
                     ),
                     // sign in button
-                SizedBox(
-                  width: 250,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final td = TD(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
-                      await auth.login(td, context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        CustomColors.customColor.shade800,
-                      ),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final td = TD(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                          await auth.login(td, context);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            CustomColors.customColor.shade800,
+                          ),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
                         ),
+                        child: auth.isLoading
+                            ? CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
+                            : Text(
+                                "Sign In",
+                                style: TextStyle(
+                                  color: Colors.grey.shade100,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
                       ),
                     ),
-                    child: auth.isLoading
-                        ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    )
-                        : Text(
-                      "Sign In",
-                      style: TextStyle(
-                        color: Colors.grey.shade100,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
+
+                    const SizedBox(
+                      height: 25,
                     ),
-                  ),
-                ),
-
-
-                const SizedBox(height: 25,),
 
                     Consumer<Auth>(
                       builder: (context, auth, child) {
                         return GestureDetector(
                           onTap: () async {
-                            await auth.resetPassword(context, emailController.text);
+                            await auth.resetPassword(
+                                context, emailController.text);
                           },
                           child: auth.isResetting
                               ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                )
                               : Text(
-                            "Reset Password",
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
+                                  "Reset Password",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
                         );
                       },
                     ),
-
-
                   ],
                 ),
               ),

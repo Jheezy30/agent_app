@@ -69,7 +69,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
             Align(
               alignment: Alignment.center,
               child: SizedBox(
-                height: 60,
+                height: 50,
                 width: 250,
                 child: ElevatedButton(
                   onPressed: () async {
@@ -98,7 +98,8 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                   ),
                   child: integrate.isLoading
                       ? CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         )
                       : Text(
                           "Register",

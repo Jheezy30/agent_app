@@ -60,7 +60,6 @@ class Geoservice extends ChangeNotifier {
     }
   }
 
-
   void cancelSubscription() {
     positionStreamSubscription?.cancel();
   }
@@ -91,6 +90,9 @@ class Geoservice extends ChangeNotifier {
         region = features[0]['properties']['state'];
         district = features[0]['properties']['county'];
         town = features[0]['properties']['suburb'];
+
+        print(location);
+        print(region);
       } else {
         // Request failed
         // Handle error
