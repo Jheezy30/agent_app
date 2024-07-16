@@ -65,7 +65,6 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.grey.shade100,
           textTheme: TextTheme(),
           inputDecorationTheme: InputDecorationTheme(isDense: true),
-        
           dropdownMenuTheme: DropdownMenuThemeData(
             inputDecorationTheme: InputDecorationTheme(isDense: false),
           ),
