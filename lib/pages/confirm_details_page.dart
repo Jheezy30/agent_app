@@ -27,14 +27,13 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
 
   @override
   void dispose() {
+    geo.stopListeningForLocationUpdates();
     super.dispose();
-    Future.microtask(() {
-      context.read<Geoservice>().stopListeningForLocationUpdates();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    geo = context.read<Geoservice>();
     final integrate = Provider.of<Integration>(context, listen: true);
     return Scaffold(
       body: Padding(
