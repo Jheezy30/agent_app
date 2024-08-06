@@ -1,4 +1,4 @@
-import 'package:agent_app/model/momo.dart';
+import 'momo.dart';
 
 class User {
   final String user_id;
@@ -6,18 +6,17 @@ class User {
   final String? business_name;
   final String? business_registration_number;
   final String contact;
-  final String location;
+  String location;
   final String? id_number;
   final String? id_type;
   final List<Momo> momos;
-
   final bool? is_ambassador;
   final bool? is_land_tenure_agent;
   final String? zone;
-  final String? region;
+  String? region;
   final String? coordinates;
-  final String latitude;
-  final String longitude;
+  String latitude;
+  String longitude;
 
   User({
     required this.user_id,
@@ -39,26 +38,26 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    var momosJson = json['momos'] as List;
+    var momosJson = json['momos'] as List<dynamic>? ?? [];
     List<Momo> momos = momosJson.map((momoJson) => Momo.fromJson(momoJson)).toList();
 
     return User(
-      user_id: json['user_id'],
-      name: json['name'],
-      business_name: json['business_name'],
-      business_registration_number: json['business_registration_number'],
-      contact: json['contact'],
-      location: json['location'],
-      id_number: json['id_number'],
-      id_type: json['id_type'],
+      user_id: json['id'] ?? '', // Ensure non-null
+      name: json['name'] ?? '', // Ensure non-null
+      business_name: json['business_name'], // Can be null
+      business_registration_number: json['business_registration_number'], // Can be null
+      contact: json['contact'] ?? '', // Ensure non-null
+      location: json['location'] ?? '', // Ensure non-null
+      id_number: json['id_number'], // Can be null
+      id_type: json['id_type'], // Can be null
       momos: momos,
-      is_ambassador: json['is_ambassador'],
-      is_land_tenure_agent: json['is_land_tenure_agent'],
-      zone: json['zone'],
-      region: json['region'],
-      coordinates: json['coordinates'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
+      is_ambassador: json['is_ambassador'], // Can be null
+      is_land_tenure_agent: json['is_land_tenure_agent'], // Can be null
+      zone: json['zone'], // Can be null
+      region: json['region'], // Can be null
+      coordinates: json['coordinates'], // Can be null
+      latitude: json['latitude'] ?? '', // Ensure non-null
+      longitude: json['longitude'] ?? '', // Ensure non-null
     );
   }
 
@@ -71,13 +70,13 @@ class User {
     'location': location,
     'id_number': id_number,
     'id_type': id_type,
-    'momos': momos.map((momo) => momo.toJson()).toList(), 
+    'momos': momos.map((momo) => momo.toJson()).toList(),
     'is_ambassador': is_ambassador,
     'is_land_tenure_agent': is_land_tenure_agent,
     'zone': zone,
     'region': region,
     'coordinates': coordinates,
     'latitude': latitude,
-    'longitude': longitude, 
+    'longitude': longitude,
   };
 }

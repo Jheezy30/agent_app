@@ -1,3 +1,5 @@
+import 'package:agent_app/pages/confirm_details_page.dart';
+import 'package:agent_app/pages/home_page.dart';
 import 'package:agent_app/pages/vendors_page.dart';
 import 'package:agent_app/services/momo_custom.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ void main() async {
   if (token?.isEmpty ?? true)
     initialRoute = 'login';
   else
-    initialRoute = 'vendorspage';
+    initialRoute = 'home';
 
   // Create a Flutter Material app as usual
   runApp(MyApp(initialRoute: initialRoute));
@@ -53,6 +55,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => MomoCustom(),
         ),
+        ChangeNotifierProvider(
+          create: (context) =>FormController(),
+          )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -60,11 +65,14 @@ class MyApp extends StatelessWidget {
         routes: {
           'login': (context) => LoginPage(),
           'vendorspage': (context) => VendorsPage(),
+          'home': (context) => HomePage(),
+          
         },
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey.shade100,
           textTheme: TextTheme(),
           inputDecorationTheme: InputDecorationTheme(isDense: true),
+        
           dropdownMenuTheme: DropdownMenuThemeData(
             inputDecorationTheme: InputDecorationTheme(isDense: false),
           ),

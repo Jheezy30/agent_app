@@ -7,4 +7,10 @@ class Apis {
   static String get addVendors => '$baseUrl/add/vendors';
 
   static String get resetPassword => '$baseUrl/password/email';
+  static String get updateVendors => '$baseUrl/update/vendors/with/cordinates';
+  static String getUserDataUrl(String phoneNumber) {
+    return '$baseUrl/get-vendor-with-momo-number-$phoneNumber';
+  }
+
+  
 }

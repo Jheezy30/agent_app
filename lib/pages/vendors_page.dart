@@ -26,31 +26,8 @@ class VendorsPage extends StatefulWidget {
 }
 
 class _VendorsPageState extends State<VendorsPage> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      context.read<Geoservice>().startListeningForLocationUpdates();
-    });
-    // geoservice = Provider.of<Geoservice>(context, listen: false);
-    // geoservice.startListeningForLocationUpdates();
-  }
+ 
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController businessNameController = TextEditingController();
-  final TextEditingController businessRegistrationNumberController =
-      TextEditingController();
-  final TextEditingController contactController = TextEditingController();
-  final TextEditingController idNumberController = TextEditingController();
-  final TextEditingController momosNumberController = TextEditingController();
-
-  bool isAmbassador = false;
-  bool isLandTenureAgent = false;
-  List<Momo> momos = [];
-
-  String _networkType = '';
-  String _zone = '';
-  String _idType = '';
   User? user;
 
   final _formKey = GlobalKey<FormState>();
@@ -62,27 +39,14 @@ class _VendorsPageState extends State<VendorsPage> {
     return null;
   }
 
-  void clearControllers() {
-    nameController.clear();
-    businessNameController.clear();
-    businessRegistrationNumberController.clear();
-    contactController.clear();
-    idNumberController.clear();
-    momosNumberController.clear();
-    _zone = '';
-    _networkType = '';
-    _idType = '';
-    isAmbassador = false;
-    isLandTenureAgent = false;
-    Provider.of<MomoCustom>(context, listen: false).clearMomos();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
     String currentId = auth.user_id;
-    return Consumer2<Geoservice, MomoCustom>(
-      builder: (__, geoservice, momo, _) => Scaffold(
+    return Consumer3<Geoservice, MomoCustom,FormController>(
+      builder: (__, geoservice, momo,formController, _) => Scaffold(
         body: Padding(
           padding: const EdgeInsets.only(top: 0),
           child: SafeArea(
@@ -119,18 +83,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.logout),
-                              onPressed: () async {
-                                await auth.logout();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
-                                  ),
-                                );
-                              },
-                            ),
+                            
                           ],
                         ),
                       ),
@@ -162,7 +115,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
 
                           MyTextFormField(
-                            controller: nameController,
+                            controller: formController.nameController,
                             labelText: "Name",
                             isRequired: true,
                             validator: _nameValidator,
@@ -171,7 +124,7 @@ class _VendorsPageState extends State<VendorsPage> {
                             height: 10,
                           ),
                           MyTextFormField(
-                            controller: contactController,
+                            controller: formController.contactController,
                             labelText: "Contact",
                             isRequired: true,
                             isNumericOnly: true,
@@ -183,10 +136,10 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
                           MyDropDownButton(
                             items: ['Ghana Card', 'Driver License'],
-                            selectedValue: _idType,
+                            selectedValue: formController._idType,
                             onChanged: (value) {
                               setState(() {
-                                _idType = value!;
+                                formController._idType = value!;
                               });
                             },
                             hintText: 'Id Type',
@@ -196,7 +149,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
                           //id_number
                           MyTextFormField(
-                            controller: idNumberController,
+                            controller: formController.idNumberController,
                             labelText: "Id Number",
                           ),
 
@@ -221,7 +174,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
 
                           MyTextFormField(
-                            controller: businessNameController,
+                            controller:formController.businessNameController,
                             labelText: "Business Name",
                           ),
                           const SizedBox(
@@ -229,7 +182,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
 
                           MyTextFormField(
-                            controller: businessRegistrationNumberController,
+                            controller:formController.businessRegistrationNumberController,
                             labelText: "Business Registration Number",
                             isNumericOnly: true,
                           ),
@@ -277,7 +230,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                       child: Column(
                                         children: [
                                           MyTextFormField(
-                                            controller: momosNumberController,
+                                            controller:formController.momosNumberController,
                                             labelText: "Momos Number",
                                             isRequired: true,
                                             isNumericOnly: true,
@@ -287,12 +240,12 @@ class _VendorsPageState extends State<VendorsPage> {
                                           MyDropDownButton(
                                             isRequired: true,
                                             items: ['MTN', 'TELECEL', 'AT'],
-                                            selectedValue: _networkType,
+                                            selectedValue:formController._networkType,
                                             validator: _nameValidator,
                                             onChanged: (value) {
-                                              _networkType = value!;
+                                            formController._networkType = value!;
                                               setState(() {
-                                                _networkType = _networkType;
+                                              formController._networkType = formController._networkType;
                                               });
                                             },
                                             hintText: 'Momos Network',
@@ -308,12 +261,12 @@ class _VendorsPageState extends State<VendorsPage> {
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            if (momosNumberController
+                                            if ( formController.momosNumberController
                                                     .text.isNotEmpty &&
-                                                _networkType.isNotEmpty) {
+                                              formController._networkType.isNotEmpty) {
                                               momo.addMomo(
-                                                  momosNumberController.text,
-                                                  _networkType);
+                                                 formController.momosNumberController.text,
+                                                formController._networkType);
                                             }
                                             Navigator.pop(context);
                                           },
@@ -416,13 +369,13 @@ class _VendorsPageState extends State<VendorsPage> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: SwitchListTile(
-                                value: isAmbassador,
+                                value:formController.isAmbassador,
                                 activeTrackColor: CustomColors.customColor,
                                 inactiveTrackColor: Colors.grey.shade300,
                                 title: Text('IsAmbassdor'),
                                 onChanged: (value) {
                                   setState(() {
-                                    isAmbassador = value;
+                                  formController.isAmbassador = value;
                                   });
                                 }),
                           ),
@@ -435,13 +388,13 @@ class _VendorsPageState extends State<VendorsPage> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: SwitchListTile(
-                                value: isLandTenureAgent,
+                                value:formController.isLandTenureAgent,
                                 activeTrackColor: CustomColors.customColor,
                                 inactiveTrackColor: Colors.grey.shade300,
                                 title: Text('IsLandTenureAgent'),
                                 onChanged: (value) {
                                   setState(() {
-                                    isLandTenureAgent = value;
+                                   formController.isLandTenureAgent = value;
                                   });
                                 }),
                           ),
@@ -459,10 +412,10 @@ class _VendorsPageState extends State<VendorsPage> {
                               'Nothern',
                               'Western',
                             ],
-                            selectedValue: _zone,
+                            selectedValue:formController._zone,
                             onChanged: (value) {
                               setState(() {
-                                _zone = value!;
+                               formController._zone = value!;
                               });
                             },
                             hintText: 'Zone',
@@ -479,10 +432,10 @@ class _VendorsPageState extends State<VendorsPage> {
                               : MyButton(
                                   onTap: () async {
                                     if (_formKey.currentState!.validate() &&
-                                        nameController.text.isNotEmpty &&
-                                        contactController.text.isNotEmpty &&
-                                        momosNumberController.text.isNotEmpty &&
-                                        _networkType.isNotEmpty) {
+                                       formController.nameController.text.isNotEmpty &&
+                                       formController.contactController.text.isNotEmpty &&
+                                       formController.momosNumberController.text.isNotEmpty &&
+                                       formController._networkType.isNotEmpty) {
                                       _formKey.currentState!.save();
 
                                       // Perform geoservice.search() and other necessary operations
@@ -491,27 +444,27 @@ class _VendorsPageState extends State<VendorsPage> {
                                       // Ensure all necessary data is collected and assigned to user object
                                       final user = User(
                                         user_id: currentId,
-                                        name: nameController.text,
-                                        business_name: businessNameController
+                                        name:formController. nameController.text,
+                                        business_name:formController.businessNameController
                                                 .text.isNotEmpty
-                                            ? businessNameController.text
-                                            : null,
+                                            ? formController.businessNameController.text
+                                            : 'N/A',	
                                         business_registration_number:
-                                            businessRegistrationNumberController
+                                           formController.businessRegistrationNumberController
                                                     .text.isNotEmpty
-                                                ? businessRegistrationNumberController
+                                                ? formController.businessRegistrationNumberController
                                                     .text
-                                                : null,
-                                        contact: contactController.text,
+                                                : 'N/A',
+                                        contact:formController.contactController.text,
                                         id_number:
-                                            idNumberController.text.isNotEmpty
-                                                ? idNumberController.text
-                                                : null,
-                                        id_type: _idType,
+                                           formController.idNumberController.text.isNotEmpty
+                                                ? formController.idNumberController.text
+                                                : 'N/A',
+                                        id_type:formController._idType,
                                         momos: momo.momos,
-                                        is_ambassador: isAmbassador,
-                                        is_land_tenure_agent: isLandTenureAgent,
-                                        zone: _zone,
+                                        is_ambassador:formController.isAmbassador,
+                                        is_land_tenure_agent:formController.isLandTenureAgent,
+                                        zone:formController._zone,
                                         location: '${geoservice.location}',
                                         region: '${geoservice.region}',
                                         longitude:
@@ -526,7 +479,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                           builder: (context) =>
                                               ConfirmDetailsPage(
                                             user: user,
-                                            clearControllers: clearControllers,
+                                            clearControllers: formController.clearControllers,
                                           ),
                                         ),
                                       );
@@ -567,3 +520,37 @@ class _VendorsPageState extends State<VendorsPage> {
     );
   }
 }
+
+class FormController with ChangeNotifier {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController businessNameController = TextEditingController();
+  final TextEditingController businessRegistrationNumberController = TextEditingController();
+  final TextEditingController contactController = TextEditingController();
+  final TextEditingController idNumberController = TextEditingController();
+  final TextEditingController momosNumberController = TextEditingController();
+
+  bool isAmbassador = false;
+  bool isLandTenureAgent = false;
+  List<Momo> momos = [];
+
+  String _networkType = '';
+  String _zone = '';
+  String _idType = '';
+
+  void clearControllers() {
+    nameController.clear();
+    businessNameController.clear();
+    businessRegistrationNumberController.clear();
+    contactController.clear();
+    idNumberController.clear();
+    momosNumberController.clear();
+    _zone = '';
+    _networkType = '';
+    _idType = '';
+    isAmbassador = false;
+    isLandTenureAgent = false;
+    momos = [];
+    notifyListeners();
+  }
+}
+

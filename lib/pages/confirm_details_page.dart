@@ -35,6 +35,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
   Widget build(BuildContext context) {
     geo = context.read<Geoservice>();
     final integrate = Provider.of<Integration>(context, listen: true);
+
     return Scaffold(
       body: Padding(
         padding:
@@ -72,18 +73,22 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                 width: 250,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await integrate.send(widget.user, context, onSuccess: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => CustomAlertDialog(
-                          title: 'Success',
-                          message: 'Agent is registered successfully',
-                        ),
-                      ).then((_) {
-                        widget.clearControllers();
-                        Navigator.pushReplacementNamed(context, 'vendorspage');
-                      });
-                    });
+                    await integrate.send(
+                      widget.user,
+                      context,
+                      onSuccess: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            title: 'Success',
+                            message: 'Agent is registered successfully',
+                          ),
+                        ).then((_) {
+                          widget.clearControllers();
+                          Navigator.pushReplacementNamed(context, 'home');
+                        });
+                      },
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -101,7 +106,7 @@ class _ConfirmDetailsPageState extends State<ConfirmDetailsPage> {
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         )
                       : Text(
-                          "Register",
+                          "Save",
                           style: TextStyle(
                             color: Colors.grey.shade100,
                             fontWeight: FontWeight.bold,

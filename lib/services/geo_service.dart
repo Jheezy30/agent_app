@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,7 +7,6 @@ import 'package:permission_handler/permission_handler.dart';
 class Geoservice extends ChangeNotifier {
   Position? currentPosition;
   StreamSubscription<Position>? positionStreamSubscription;
-  String? formattedAddress;
   bool isLoading = false;
   String? address;
   String? region;
@@ -41,6 +39,14 @@ class Geoservice extends ChangeNotifier {
       openAppSettings();
     } else {
       try {
+        // Initial coarse location
+        final Position initialPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.low,
+        );
+        currentPosition = initialPosition;
+        notifyListeners();
+
+        // Now start listening for high-accuracy updates
         final LocationSettings locationSettings = LocationSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 10,
@@ -85,11 +91,11 @@ class Geoservice extends ChangeNotifier {
       if (response.statusCode == 200) {
         final data = response.data;
         final features = data['features'];
-        address = features[0]['properties']['address_line2'];
-        location = features[0]['properties']['formatted'];
-        region = features[0]['properties']['state'];
-        district = features[0]['properties']['county'];
-        town = features[0]['properties']['suburb'];
+        address = features[0]['properties']['address_line2'] ?? 'N/A';
+        location = features[0]['properties']['formatted'] ?? 'N/A';
+        region = features[0]['properties']['state'] ?? 'N/A';
+        district = features[0]['properties']['county'] ?? 'N/A';
+        town = features[0]['properties']['suburb'] ?? 'N/A';
 
         print(location);
         print(region);
