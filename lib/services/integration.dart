@@ -1,3 +1,4 @@
+import 'package:agent_app/components/custom_color.dart';
 import 'package:agent_app/services/geo_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -99,15 +100,31 @@ class Integration extends ChangeNotifier {
         builder: (context) => AlertDialog(
           title: Text("Wallet already assigned"),
           content: Text(
-            'The wallet number has already been assigned\n'
+            'The wallet number has already been assigned.\n'
             'Do you want to update the vendor details?',
           ),
           actions: [
-            TextButton(
-                onPressed: () async {
-                  await updateUser(user, context);
-                },
-                child: Text("ok"))
+            InkWell(
+              onTap: () async {
+                await updateUser(user, context);
+              },
+              child: Container(
+                height: 30,
+                width: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: CustomColors.customColor,
+                ),
+                child: Center(
+                  child: Text(
+                    "Ok",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       );
