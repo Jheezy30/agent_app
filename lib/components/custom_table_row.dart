@@ -1,5 +1,7 @@
 import 'package:agent_app/components/custom_color.dart';
+import 'package:agent_app/components/my_drop_down_button.dart';
 import 'package:agent_app/model/momo.dart';
+import 'package:agent_app/pages/vendors_page.dart';
 import 'package:agent_app/services/momo_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +20,8 @@ class CustomTableRow extends StatefulWidget {
 class _CustomTableRowState extends State<CustomTableRow> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<MomoCustom>(builder: (__, momo, _) {
-      return Column(
+    return Consumer2<MomoCustom,FormController>(builder: (__, momo,formController, _) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Table(
@@ -194,10 +196,31 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 title: 'Latitude',
                 info: '${widget.user.latitude}',
               ),
-              confirmationTableRow(
-                title: 'Zone',
-                info: '${widget.user.zone}',
-              ),
+              TableRow(children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text("Zone"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, bottom: 12, left: 5, right: 20),
+                  child: MyDropDownButton(
+                            items: [
+                              'Greater Accra',
+                              'Eastern ',
+                              'Middle Belt',
+                              'Nothern',
+                              'Western',
+                            ],
+                            selectedValue:formController.zone ,
+                            onChanged: (value) {
+                              setState(() {
+                               formController.zone = value!;
+                              });
+                            },
+                            hintText: 'Zone',
+                          ),
+                ),
+              ]),
               confirmationTableRow(
                 title: 'Location',
                 info: '${widget.user.location}',
@@ -209,8 +232,9 @@ class _CustomTableRowState extends State<CustomTableRow> {
             ],
           ),
         ],
-      );
-    });
+      ),
+    
+    );
   }
 }
 

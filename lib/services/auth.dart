@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:agent_app/components/custom_alert_dialogue.dart';
 import 'package:agent_app/model/td.dart';
+import 'package:agent_app/pages/home_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +48,7 @@ class Auth extends ChangeNotifier {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VendorsPage(),
+            builder: (context) => HomePage(),
           ),
         );
       } else {

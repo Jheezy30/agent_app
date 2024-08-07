@@ -27,10 +27,17 @@ class Integration extends ChangeNotifier {
 
     // Read token
     _token = prefs.getString('token');
-    print(_token);
+    print('Token retrieved: $_token');
+
+    if (_token == null) {
+      print('No token found');
+      isLoading = false;
+      notifyListeners();
+      // Handle the missing token case (e.g., show an error dialog or redirect to login)
+      return;
+    }
 
     try {
-      // Perform the API request to create the vendor
       final dio = Dio();
 
       // Log request details
@@ -59,7 +66,7 @@ class Integration extends ChangeNotifier {
         data: user.toJson(),
         options: Options(
           headers: {
-            'Authorization': 'Bearer $token', // Include the bearer token
+            'Authorization': 'Bearer $_token', // Include the bearer token
             'Content-Type': 'application/json',
           },
         ),
@@ -68,8 +75,8 @@ class Integration extends ChangeNotifier {
       // Handle the API response based on success field
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = response.data;
-        success =
-            responseData['success']; // Check for the actual 'success' field
+        success = responseData['success'] ??
+            false; // Check for the actual 'success' field
         message = responseData['message'];
         print(response.data);
 
@@ -103,38 +110,32 @@ class Integration extends ChangeNotifier {
             'The wallet number has already been assigned.\n'
             'Do you want to update the vendor details?',
           ),
-          actions: [
-            InkWell(
-              onTap: () async {
-                await updateUser(user, context);
-              },
-              child: Container(
-                height: 30,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: CustomColors.customColor,
-                ),
-                child: Center(
-                  child: Text(
-                    "Ok",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
         ),
       );
-      // Include error message in case of exception
     }
   }
 
-  Future<void> updateUser(User user, BuildContext context) async {
+  Future<void> updateUser(User user, BuildContext context,
+      {required Function onUpdate}) async {
+    isLoading = true;
+    notifyListeners();
+    // Fetch the token from SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    print('Token retrieved: $token');
+
+    if (token == null) {
+      print('No token found');
+      isLoading = false;
+      notifyListeners();
+      // Handle the missing token case (e.g., show an error dialog or redirect to login)
+      return;
+    }
+
     try {
       final dio = Dio();
+
+      // Log request details
       dio.interceptors.add(
         InterceptorsWrapper(
           onRequest: (options, handler) {
@@ -154,6 +155,7 @@ class Integration extends ChangeNotifier {
           },
         ),
       );
+
       Response response = await dio.post(
         Apis.updateVendors,
         data: {
@@ -187,27 +189,7 @@ class Integration extends ChangeNotifier {
         if (success) {
           isLoading = false;
           notifyListeners();
-          Navigator.pop(context);
-          showDialog(
-            context: context,
-            builder: (context) {
-              // Schedule a delayed dismissal of the alert dialog after 1 seconds
-              Future.delayed(Duration(seconds: 1), () {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.pushNamed(
-                    context, 'home'); // Navigate to the home page
-              });
-
-              // Return the AlertDialog widget
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0), // Rounded corners
-                ),
-                title: Text('Update Successful'),
-                content: Text('Vendor details have been updated successfully.'),
-              );
-            },
-          );
+          onUpdate();
         } else {
           showDialog(
             context: context,
@@ -224,7 +206,7 @@ class Integration extends ChangeNotifier {
           context: context,
           builder: (context) => CustomAlertDialog(
             title: 'Error',
-            message: 'Update failed with status code',
+            message: 'Update failed with status code ${response.statusCode}',
           ),
         );
       }
@@ -235,7 +217,7 @@ class Integration extends ChangeNotifier {
         context: context,
         builder: (context) => CustomAlertDialog(
           title: 'Error',
-          message: 'An unexpected error occurred: ',
+          message: 'An unexpected error occurred:',
         ),
       );
     }
@@ -259,8 +241,7 @@ class Integration extends ChangeNotifier {
 
         if (data['success'] == true) {
           final userData = data['message'];
-          isLoading = false;
-          notifyListeners();
+         
 
           if (userData != null && userData is Map<String, dynamic>) {
             try {
@@ -283,7 +264,7 @@ class Integration extends ChangeNotifier {
             } catch (e) {
               isLoading = false;
               notifyListeners();
-              print("Error parsing user data: $e"); // Print parsing error
+              print("Error parsing user data: "); // Print parsing error
               showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(

@@ -76,7 +76,7 @@ class _VendorsPageState extends State<VendorsPage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 0),
                               child: Text(
-                                "Register Agent",
+                                "Register Vendor",
                                 style: TextStyle(
                                   color: Colors.grey.shade900,
                                   fontSize: 20,
@@ -136,10 +136,10 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
                           MyDropDownButton(
                             items: ['Ghana Card', 'Driver License'],
-                            selectedValue: formController._idType,
+                            selectedValue: formController.idType,
                             onChanged: (value) {
                               setState(() {
-                                formController._idType = value!;
+                                formController.idType = value!;
                               });
                             },
                             hintText: 'Id Type',
@@ -240,12 +240,12 @@ class _VendorsPageState extends State<VendorsPage> {
                                           MyDropDownButton(
                                             isRequired: true,
                                             items: ['MTN', 'TELECEL', 'AT'],
-                                            selectedValue:formController._networkType,
+                                            selectedValue:formController.networkType,
                                             validator: _nameValidator,
                                             onChanged: (value) {
-                                            formController._networkType = value!;
+                                            formController.networkType = value!;
                                               setState(() {
-                                              formController._networkType = formController._networkType;
+                                              formController.networkType = formController.networkType;
                                               });
                                             },
                                             hintText: 'Momos Network',
@@ -263,10 +263,10 @@ class _VendorsPageState extends State<VendorsPage> {
                                           onPressed: () {
                                             if ( formController.momosNumberController
                                                     .text.isNotEmpty &&
-                                              formController._networkType.isNotEmpty) {
+                                              formController.networkType.isNotEmpty) {
                                               momo.addMomo(
                                                  formController.momosNumberController.text,
-                                                formController._networkType);
+                                                formController.networkType);
                                             }
                                             Navigator.pop(context);
                                           },
@@ -412,10 +412,10 @@ class _VendorsPageState extends State<VendorsPage> {
                               'Nothern',
                               'Western',
                             ],
-                            selectedValue:formController._zone,
+                            selectedValue:formController.zone,
                             onChanged: (value) {
                               setState(() {
-                               formController._zone = value!;
+                               formController.zone = value!;
                               });
                             },
                             hintText: 'Zone',
@@ -435,7 +435,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                        formController.nameController.text.isNotEmpty &&
                                        formController.contactController.text.isNotEmpty &&
                                        formController.momosNumberController.text.isNotEmpty &&
-                                       formController._networkType.isNotEmpty) {
+                                       formController.networkType.isNotEmpty) {
                                       _formKey.currentState!.save();
 
                                       // Perform geoservice.search() and other necessary operations
@@ -460,11 +460,11 @@ class _VendorsPageState extends State<VendorsPage> {
                                            formController.idNumberController.text.isNotEmpty
                                                 ? formController.idNumberController.text
                                                 : 'N/A',
-                                        id_type:formController._idType,
+                                        id_type:formController.idType,
                                         momos: momo.momos,
                                         is_ambassador:formController.isAmbassador,
                                         is_land_tenure_agent:formController.isLandTenureAgent,
-                                        zone:formController._zone,
+                                        zone:formController.zone,
                                         location: '${geoservice.location}',
                                         region: '${geoservice.region}',
                                         longitude:
@@ -478,8 +478,7 @@ class _VendorsPageState extends State<VendorsPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ConfirmDetailsPage(
-                                            user: user,
-                                            clearControllers: formController.clearControllers,
+                                            user: user
                                           ),
                                         ),
                                       );
@@ -533,9 +532,9 @@ class FormController with ChangeNotifier {
   bool isLandTenureAgent = false;
   List<Momo> momos = [];
 
-  String _networkType = '';
-  String _zone = '';
-  String _idType = '';
+  String networkType = '';
+  String zone = '';
+  String idType = '';
 
   void clearControllers() {
     nameController.clear();
@@ -544,9 +543,9 @@ class FormController with ChangeNotifier {
     contactController.clear();
     idNumberController.clear();
     momosNumberController.clear();
-    _zone = '';
-    _networkType = '';
-    _idType = '';
+    zone = '';
+    networkType = '';
+    idType = '';
     isAmbassador = false;
     isLandTenureAgent = false;
     momos = [];

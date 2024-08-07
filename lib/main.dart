@@ -57,6 +57,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) =>FormController(),
+          ),
+        ChangeNotifierProvider(
+          create: (context) => MyController(),
           )
       ],
       child: MaterialApp(
