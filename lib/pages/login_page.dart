@@ -43,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
                     SvgPicture.asset(
                       'images/logo.svg',
                       semanticsLabel: 'korba Logo',
-                      height: 100,
-                      width: 100,
+                      height: 50,
+                      width: 50,
                     ),
 
                     const SizedBox(

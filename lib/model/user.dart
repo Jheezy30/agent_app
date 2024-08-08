@@ -12,7 +12,7 @@ class User {
   final List<Momo> momos;
   final bool? is_ambassador;
   final bool? is_land_tenure_agent;
-  final String? zone;
+   String? zone;
   String? region;
   final String? coordinates;
   String latitude;

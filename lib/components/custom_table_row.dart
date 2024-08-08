@@ -20,8 +20,9 @@ class CustomTableRow extends StatefulWidget {
 class _CustomTableRowState extends State<CustomTableRow> {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<MomoCustom,FormController>(builder: (__, momo,formController, _) =>
-      Column(
+    print('the zone is ${widget.user.zone}');
+    return Consumer<MomoCustom>(
+      builder: (__, momo, _) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Table(
@@ -196,14 +197,18 @@ class _CustomTableRowState extends State<CustomTableRow> {
                 title: 'Latitude',
                 info: '${widget.user.latitude}',
               ),
-              TableRow(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Text("Zone"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 12, left: 5, right: 20),
-                  child: MyDropDownButton(
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text("Zone"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 12, bottom: 12, left: 5, right: 20),
+                    child: widget.user.zone != null
+                        ? Text(widget.user.zone!)
+                        : MyDropDownButton(
                             items: [
                               'Greater Accra',
                               'Eastern ',
@@ -211,16 +216,18 @@ class _CustomTableRowState extends State<CustomTableRow> {
                               'Nothern',
                               'Western',
                             ],
-                            selectedValue:formController.zone ,
+                            selectedValue: widget.user.zone ?? 'N/A',
                             onChanged: (value) {
                               setState(() {
-                               formController.zone = value!;
+                                widget.user.zone = value!;
                               });
+                              print("the zone is: ${widget.user.zone}");
                             },
                             hintText: 'Zone',
                           ),
-                ),
-              ]),
+                  ),
+                ],
+              ),
               confirmationTableRow(
                 title: 'Location',
                 info: '${widget.user.location}',
@@ -233,7 +240,6 @@ class _CustomTableRowState extends State<CustomTableRow> {
           ),
         ],
       ),
-    
     );
   }
 }

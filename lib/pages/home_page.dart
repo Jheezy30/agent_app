@@ -27,35 +27,56 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  final TextEditingController walletController = TextEditingController();
+
+  clearWalletController() {
+    walletController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer3<Auth, FormController, MomoCustom>(
-      builder: (__, auth, formController, momos, _) => Scaffold(
+    return Consumer2<Auth, MomoCustom>(
+      builder: (__, auth, momos, _) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.grey.shade100,
           title: Text('H O M E  P A G E'),
-          leading: SizedBox(), 
+          leading: SizedBox(), // Removes the default leading icon
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: IconButton(
+                onPressed: () {
+                  auth.logout();
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    'login',
+                    (route) => false,
+                  );
+                },
+                icon: Icon(
+                  Icons.logout,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Align(
-              alignment: Alignment
-                  .topCenter, // Center horizontally, adjust vertical with padding
+              alignment: Alignment.topCenter, // Center horizontally
               child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 150), // Push container up from the top
+                padding: const EdgeInsets.only(top: 150), // Push container up from the top
                 child: Container(
                   constraints: BoxConstraints(
-                    maxWidth:
-                        600, // Optional: set a max width for better layout control
+                    maxWidth: 600, // Optional: set a max width for better layout control
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20), // Padding around the buttons
+                        padding: const EdgeInsets.symmetric(vertical: 20), // Padding around the buttons
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -88,8 +109,7 @@ class UpdateVendorWidget extends StatefulWidget {
 }
 
 class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
-  bool _isEditing =
-      false; // State to manage the visibility of the text box and button
+  bool _isEditing = false; // State to manage the visibility of the text box and button
 
   void _toggleEdit() {
     setState(() {
@@ -107,15 +127,19 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
     }
     return null;
   }
+  final TextEditingController walletController = TextEditingController();
+
+  clearWalletController() {
+    walletController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => Future.value(false),
-      child: Consumer2<Integration, MyController>(
-        builder: (__, integrate, myController, _) => Container(
-          padding: const EdgeInsets.symmetric(
-              vertical: 10), // Padding around the container
+      child: Consumer<Integration>(
+        builder: (__, integrate,  _) => Container(
+          padding: const EdgeInsets.symmetric(vertical: 10), // Padding around the container
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -133,17 +157,15 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
                         Expanded(
                           flex: 2,
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 28), // Adjusted padding
+                            padding: const EdgeInsets.only(left: 28), // Adjusted padding
                             child: TextFormField(
-                              controller: myController.walletController,
+                              controller: walletController,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 labelText: 'Enter Vendor Wallet Number',
                                 hintStyle: TextStyle(
-                                  fontSize:
-                                      11, // Increase font size for hint text
+                                  fontSize: 11, // Increase font size for hint text
                                 ),
                                 labelStyle: TextStyle(
                                   color: Colors.black,
@@ -152,14 +174,15 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                    )),
-      
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
                                 contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15,
-                                    horizontal: 15), // Increase padding
+                                  vertical: 15,
+                                  horizontal: 15, // Increase padding
+                                ),
                               ),
                               validator: _validateWallet,
                               minLines: 1, // Minimum number of lines
@@ -171,33 +194,33 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                            width: 5), // Space between TextFormField and button
+                        SizedBox(width: 5), // Space between TextFormField and button
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 5, right: 25), // Adjusted padding
+                          padding: const EdgeInsets.only(left: 5, right: 25), // Adjusted padding
                           child: integrate.isLoading
                               ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      CustomColors.customColor),
+                                  valueColor: AlwaysStoppedAnimation<Color>(CustomColors.customColor),
                                 )
                               : InkWell(
                                   onTap: () async {
                                     if (formKey.currentState!.validate()) {
                                       formKey.currentState!.save();
                                       await integrate.fetchUserByPhoneNumber(
-                                          context,
-                                          myController.walletController.text,
-                                          onSuccess: (User user) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ConfirmDetailsPage(
-                                                    update: true, user: user),
-                                          ),
-                                        );
-                                      });
+                                        context,
+                                        walletController.text,
+                                        onSuccess: (User user) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ConfirmDetailsPage(
+                                                update: true,
+                                                user: user,
+                                                clearControllers: clearWalletController,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
                                     }
                                   },
                                   child: Container(
@@ -227,10 +250,3 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
   }
 }
 
-class MyController extends ChangeNotifier {
-  final TextEditingController walletController = TextEditingController();
-
-  clearWalletController() {
-    walletController.clear();
-  }
-}
