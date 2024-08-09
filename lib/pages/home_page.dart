@@ -135,8 +135,8 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
   String? _validateWallet(String? value) {
     if (value == null || value.isEmpty) {
       return 'This field is required';
-    } else if (value.length < 10) {
-      return 'Digit is not up to 10';
+    } else if (value.length != 10) {
+      return 'The number must be 10 digits';
     }
     return null;
   }

@@ -53,8 +53,8 @@ class MyTextFormField extends StatelessWidget {
           }
 
           if (isNumericOnly && value != null && value.isNotEmpty) {
-            if (value.length < 10) {
-              return 'Digit is not up to 10';
+            if (value.length != 10) {
+              return 'The number must be 10 digits';
             }
           }
 

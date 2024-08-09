@@ -292,8 +292,8 @@ class Integration extends ChangeNotifier {
           showDialog(
             context: context,
             builder: (context) => CustomAlertDialog(
-              title: 'Error',
-              message: 'Vendors not found.',
+              title: 'Vendor Status',
+              message: 'Vendor not found.',
             ),
           );
         }
