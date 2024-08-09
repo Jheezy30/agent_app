@@ -68,8 +68,8 @@ class Auth extends ChangeNotifier {
       showDialog(
         context: context,
         builder: (context) => CustomAlertDialog(
-          title: 'Operation failed',
-          message: 'The operation was not successful',
+          title: 'Invalid credentials',
+          message: 'Please check your username and password and try again.',
         ),
       );
     }

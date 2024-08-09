@@ -26,8 +26,6 @@ class VendorsPage extends StatefulWidget {
 }
 
 class _VendorsPageState extends State<VendorsPage> {
- 
-
   User? user;
 
   final _formKey = GlobalKey<FormState>();
@@ -38,9 +36,11 @@ class _VendorsPageState extends State<VendorsPage> {
     }
     return null;
   }
-   final TextEditingController nameController = TextEditingController();
+
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController businessNameController = TextEditingController();
-  final TextEditingController businessRegistrationNumberController = TextEditingController();
+  final TextEditingController businessRegistrationNumberController =
+      TextEditingController();
   final TextEditingController contactController = TextEditingController();
   final TextEditingController idNumberController = TextEditingController();
   final TextEditingController momosNumberController = TextEditingController();
@@ -67,8 +67,6 @@ class _VendorsPageState extends State<VendorsPage> {
     isLandTenureAgent = false;
     momos = [];
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +110,6 @@ class _VendorsPageState extends State<VendorsPage> {
                                 ),
                               ),
                             ),
-                            
                           ],
                         ),
                       ),
@@ -203,7 +200,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
 
                           MyTextFormField(
-                            controller:businessNameController,
+                            controller: businessNameController,
                             labelText: "Business Name",
                           ),
                           const SizedBox(
@@ -211,7 +208,7 @@ class _VendorsPageState extends State<VendorsPage> {
                           ),
 
                           MyTextFormField(
-                            controller:businessRegistrationNumberController,
+                            controller: businessRegistrationNumberController,
                             labelText: "Business Registration Number",
                             isNumericOnly: true,
                           ),
@@ -259,25 +256,28 @@ class _VendorsPageState extends State<VendorsPage> {
                                       child: Column(
                                         children: [
                                           MyTextFormField(
-                                            controller:momosNumberController,
+                                            controller: momosNumberController,
                                             labelText: "Momos Number",
                                             isRequired: true,
                                             isNumericOnly: true,
                                             validator: _nameValidator,
                                           ),
                                           const SizedBox(height: 15),
-                                          MyDropDownButton(
-                                            isRequired: true,
-                                            items: ['MTN', 'TELECEL', 'AT'],
-                                            selectedValue: networkType,
-                                            validator: _nameValidator,
-                                            onChanged: (value) {
-                                            networkType = value!;
-                                              setState(() {
-                                              networkType = networkType;
-                                              });
-                                            },
-                                            hintText: 'Momos Network',
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.6,
+                                            child: MyDropDownButton(
+                                              isRequired: true,
+                                              items: ['MTN', 'TELECEL', 'AT'],
+                                              selectedValue: networkType,
+                                              validator: _nameValidator,
+                                              onChanged: (value) {
+                                                networkType = value!;
+                                                setState(() {
+                                                  networkType = networkType;
+                                                });
+                                              },
+                                              hintText: 'Momos Network',
+                                            ),
                                           ),
                                           const SizedBox(height: 15),
                                         ],
@@ -290,12 +290,12 @@ class _VendorsPageState extends State<VendorsPage> {
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            if ( momosNumberController
+                                            if (momosNumberController
                                                     .text.isNotEmpty &&
-                                              networkType.isNotEmpty) {
+                                                networkType.isNotEmpty) {
                                               momo.addMomo(
-                                                 momosNumberController.text,
-                                                networkType);
+                                                  momosNumberController.text,
+                                                  networkType);
                                             }
                                             Navigator.pop(context);
                                           },
@@ -394,42 +394,6 @@ class _VendorsPageState extends State<VendorsPage> {
                             padding: EdgeInsets.only(left: 8, top: 8),
                           ),
 
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: SwitchListTile(
-                                value:isAmbassador,
-                                activeTrackColor: CustomColors.customColor,
-                                inactiveTrackColor: Colors.grey.shade300,
-                                title: Text('IsAmbassdor'),
-                                onChanged: (value) {
-                                  setState(() {
-                                  isAmbassador = value;
-                                  });
-                                }),
-                          ),
-
-                          const SizedBox(
-                            height: 10,
-                          ),
-
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: SwitchListTile(
-                                value:isLandTenureAgent,
-                                activeTrackColor: CustomColors.customColor,
-                                inactiveTrackColor: Colors.grey.shade300,
-                                title: Text('IsLandTenureAgent'),
-                                onChanged: (value) {
-                                  setState(() {
-                                   isLandTenureAgent = value;
-                                  });
-                                }),
-                          ),
-
-                          // Wallet number
-
                           const SizedBox(
                             height: 15,
                           ),
@@ -441,10 +405,10 @@ class _VendorsPageState extends State<VendorsPage> {
                               'Nothern',
                               'Western',
                             ],
-                            selectedValue:zone,
+                            selectedValue: zone,
                             onChanged: (value) {
                               setState(() {
-                               zone = value!;
+                                zone = value!;
                               });
                             },
                             hintText: 'Zone',
@@ -461,10 +425,10 @@ class _VendorsPageState extends State<VendorsPage> {
                               : MyButton(
                                   onTap: () async {
                                     if (_formKey.currentState!.validate() &&
-                                       nameController.text.isNotEmpty &&
-                                       contactController.text.isNotEmpty &&
-                                       momosNumberController.text.isNotEmpty &&
-                                       networkType.isNotEmpty) {
+                                        nameController.text.isNotEmpty &&
+                                        contactController.text.isNotEmpty &&
+                                        momosNumberController.text.isNotEmpty &&
+                                        networkType.isNotEmpty) {
                                       _formKey.currentState!.save();
 
                                       // Perform geoservice.search() and other necessary operations
@@ -474,26 +438,26 @@ class _VendorsPageState extends State<VendorsPage> {
                                       final user = User(
                                         user_id: currentId,
                                         name: nameController.text,
-                                        business_name:businessNameController
+                                        business_name: businessNameController
                                                 .text.isNotEmpty
                                             ? businessNameController.text
-                                            : 'N/A',	
+                                            : 'N/A',
                                         business_registration_number:
-                                           businessRegistrationNumberController
+                                            businessRegistrationNumberController
                                                     .text.isNotEmpty
                                                 ? businessRegistrationNumberController
                                                     .text
                                                 : 'N/A',
-                                        contact:contactController.text,
+                                        contact: contactController.text,
                                         id_number:
-                                           idNumberController.text.isNotEmpty
+                                            idNumberController.text.isNotEmpty
                                                 ? idNumberController.text
                                                 : 'N/A',
-                                        id_type:idType,
+                                        id_type: idType,
                                         momos: momo.momos,
-                                        is_ambassador:isAmbassador,
-                                        is_land_tenure_agent:isLandTenureAgent,
-                                        zone:zone,
+                                        is_ambassador: isAmbassador,
+                                        is_land_tenure_agent: isLandTenureAgent,
+                                        zone: zone,
                                         location: '${geoservice.location}',
                                         region: '${geoservice.region}',
                                         longitude:
@@ -507,7 +471,8 @@ class _VendorsPageState extends State<VendorsPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ConfirmDetailsPage(
-                                            user: user, clearControllers: clearControllers,
+                                            user: user,
+                                            clearControllers: clearControllers,
                                           ),
                                         ),
                                       );
@@ -548,4 +513,3 @@ class _VendorsPageState extends State<VendorsPage> {
     );
   }
 }
-
