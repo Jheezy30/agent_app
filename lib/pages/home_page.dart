@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         SizedBox(
-                            height: 15), // Space between the top and content
+                            height: MediaQuery.of(context).size.height * 0.13), // Space between the top and content
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.all(20),
@@ -157,100 +157,102 @@ class _UpdateVendorWidgetState extends State<UpdateVendorWidget> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              MyButton(onTap: _toggleEdit, text: "Update Vendor"),
-              if (_isEditing) ...[
+              MyButton(onTap: _toggleEdit, text: "Update Vendor"),  
                 SizedBox(height: 26),
                 Form(
                   key: formKey,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30),
-                          child: TextFormField(
-                            controller: walletController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Vendor Wallet Number',
-                              hintStyle: TextStyle(fontSize: 11),
-                              labelStyle: TextStyle(color: Colors.black),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
+                  child: AnimatedOpacity(
+                    opacity: _isEditing ? 1.0 : 0.0,
+                    duration: Duration(milliseconds: 300),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30),
+                            child: TextFormField(
+                              controller: walletController,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: 'Vendor Wallet Number',
+                                hintStyle: TextStyle(fontSize: 11),
+                                labelStyle: TextStyle(color: Colors.black),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 10,
+                                ),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 10,
-                              ),
+                              validator: _validateWallet,
+                              minLines: 1,
+                              maxLines:
+                                  1, // Change maxLines to 1 to prevent growth
+                              style: TextStyle(color: Colors.black),
+                              cursorColor: Colors.black,
                             ),
-                            validator: _validateWallet,
-                            minLines: 1,
-                            maxLines:
-                                1, // Change maxLines to 1 to prevent growth
-                            style: TextStyle(color: Colors.black),
-                            cursorColor: Colors.black,
                           ),
                         ),
-                      ),
-                    
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 25),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: integrate.isLoading
-                              ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      CustomColors.customColor),
-                                )
-                              : InkWell(
-                                  onTap: () async {
-                                    if (formKey.currentState!.validate()) {
-                                      formKey.currentState!.save();
-                                      await integrate.fetchUserByPhoneNumber(
-                                        context,
-                                        walletController.text,
-                                        onSuccess: (User user) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ConfirmDetailsPage(
-                                                update: true,
-                                                user: user,
-                                                clearControllers:
-                                                    clearWalletController,
+                      
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 25),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: integrate.isLoading
+                                ? CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        CustomColors.customColor),
+                                  )
+                                : InkWell(
+                                    onTap: () async {
+                                      if (formKey.currentState!.validate()) {
+                                        formKey.currentState!.save();
+                                        await integrate.fetchUserByPhoneNumber(
+                                          context,
+                                          walletController.text,
+                                          onSuccess: (User user) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ConfirmDetailsPage(
+                                                  update: true,
+                                                  user: user,
+                                                  clearControllers:
+                                                      clearWalletController,
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: CustomColors.customColor,
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: CustomColors.customColor,
+                                      ),
+                                      child: Icon(Icons.arrow_forward,
+                                          color: Colors.white),
                                     ),
-                                    child: Icon(Icons.arrow_forward,
-                                        color: Colors.white),
                                   ),
-                                ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
-            ],
           ),
         ),
       ),
